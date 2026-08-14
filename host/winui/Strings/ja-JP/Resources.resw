@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="AppTitle.Title" xml:space="preserve">
+        <value>Rotary</value>
+    </data>
+    <data name="SerialHeader.Text" xml:space="preserve">
+        <value>シリアル</value>
+    </data>
+    <data name="PortLabel.Text" xml:space="preserve">
+        <value>ポート：</value>
+    </data>
+    <data name="RefreshButton.Content" xml:space="preserve">
+        <value>更新</value>
+    </data>
+    <data name="StartButton.Content" xml:space="preserve">
+        <value>監視開始</value>
+    </data>
+    <data name="SensorButton.Content" xml:space="preserve">
+        <value>センサービュー...</value>
+    </data>
+    <data name="StatusText.Text" xml:space="preserve">
+        <value>停止中</value>
+    </data>
+    <data name="WallpaperHeader.Text" xml:space="preserve">
+        <value>壁紙</value>
+    </data>
+    <data name="ModeBothRadio.Content" xml:space="preserve">
+        <value>すべてのモニター</value>
+    </data>
+    <data name="ModeMainRadio.Content" xml:space="preserve">
+        <value>回転モニターのみ</value>
+    </data>
+    <data name="WallpaperHint" xml:space="preserve">
+        <value>各モニターは自分の向きに合った画像を使用します——横向きは横向き用、縦向きは縦向き用です。</value>
+    </data>
+    <data name="LandscapeLabel.Text" xml:space="preserve">
+        <value>横向き：</value>
+    </data>
+    <data name="PortraitLabel.Text" xml:space="preserve">
+        <value>縦向き：</value>
+    </data>
+    <data name="SecondaryLabel.Text" xml:space="preserve">
+        <value>背景色：</value>
+    </data>
+    <data name="MappingHeader.Text" xml:space="preserve">
+        <value>マッピング</value>
+    </data>
+    <data name="State1Label.Text" xml:space="preserve">
+        <value>縦方向 1 → 回転先：</value>
+    </data>
+    <data name="State3Label.Text" xml:space="preserve">
+        <value>縦方向 2 → 回転先：</value>
+    </data>
+    <data name="MappingHint" xml:space="preserve">
+        <value>校正でセンサーの取り付けオフセットを設定します。横向き = 0°、右端が下 = 90°、逆さま = 180°、左端が下 = 270°。</value>
+    </data>
+    <data name="CalButton" xml:space="preserve">
+        <value>校正...</value>
+    </data>
+    <data name="CalStatus" xml:space="preserve">
+        <value>取り付けオフセット：{0}°</value>
+    </data>
+    <data name="CalNotCalibrated" xml:space="preserve">
+        <value>未校正（既定 0°）</value>
+    </data>
+    <data name="CalTitle" xml:space="preserve">
+        <value>取り付け方向の校正</value>
+    </data>
+    <data name="CalIntro" xml:space="preserve">
+        <value>アクセサリーをモニターに取り付け、モニターを横向き（ランドスケープ）に保ちます。</value>
+    </data>
+    <data name="CalChoose" xml:space="preserve">
+        <value>回転させる方向を選択し、その位置までモニターを回転して、“取得”を押します。</value>
+    </data>
+    <data name="CalCapture" xml:space="preserve">
+        <value>方向を取得</value>
+    </data>
+    <data name="CalDone" xml:space="preserve">
+        <value>校正完了。取り付けオフセット：{0}°</value>
+    </data>
+    <data name="CalLive" xml:space="preserve">
+        <value>現在の角度：</value>
+    </data>
+    <data name="CalFinish" xml:space="preserve">
+        <value>完了</value>
+    </data>
+    <data name="CalNoData" xml:space="preserve">
+        <value>センサーデータを待っています...</value>
+    </data>
+    <data name="TestHeader.Text" xml:space="preserve">
+        <value>テスト（即時回転）</value>
+    </data>
+    <data name="TestLandscapeButton.Content" xml:space="preserve">
+        <value>横向き</value>
+    </data>
+    <data name="TestPortrait90Button.Content" xml:space="preserve">
+        <value>縦90</value>
+    </data>
+    <data name="TestPortrait270Button.Content" xml:space="preserve">
+        <value>縦270</value>
+    </data>
+    <data name="TestFlippedButton.Content" xml:space="preserve">
+        <value>反転180</value>
+    </data>
+    <data name="ApplyOnStartupCheck.Content" xml:space="preserve">
+        <value>起動時に現在の向きを適用</value>
+    </data>
+    <data name="LanguageLabel.Text" xml:space="preserve">
+        <value>言語：</value>
+    </data>
+    <data name="SaveButton.Content" xml:space="preserve">
+        <value>設定を保存</value>
+    </data>
+    <data name="LogHeader.Text" xml:space="preserve">
+        <value>ログ</value>
+    </data>
+    <data name="OptionsHeader" xml:space="preserve">
+        <value>オプション</value>
+    </data>
+    <data name="StartWithWindows" xml:space="preserve">
+        <value>Windows と一緒に起動</value>
+    </data>
+    <data name="AppSubtitle" xml:space="preserve">
+        <value>モニター回転スイッチ · D1 Mini + BMI160</value>
+    </data>
+    <data name="MsgStartupOn" xml:space="preserve">
+        <value>Windows 起動を有効にしました。</value>
+    </data>
+    <data name="MsgStartupOff" xml:space="preserve">
+        <value>Windows 起動を無効にしました。</value>
+    </data>
+    <data name="MsgPickPortTitle" xml:space="preserve">
+        <value>COMポートがありません</value>
+    </data>
+    <data name="MsgAutoPickedPort" xml:space="preserve">
+        <value>ポート {0} を自動選択しました。</value>
+    </data>
+    <data name="MsgCloseSensorFirst" xml:space="preserve">
+        <value>監視を開始する前にセンサービューを閉じてください。</value>
+    </data>
+    <data name="NavMonitor" xml:space="preserve">
+        <value>モニター</value>
+    </data>
+    <data name="NavWallpaper" xml:space="preserve">
+        <value>壁紙</value>
+    </data>
+    <data name="NavOptions" xml:space="preserve">
+        <value>オプション</value>
+    </data>
+    <data name="NavLog" xml:space="preserve">
+        <value>ログ</value>
+    </data>
+    <data name="AutoRestart" xml:space="preserve">
+        <value>クラッシュ時に自動再起動</value>
+    </data>
+    <data name="RestartNow" xml:space="preserve">
+        <value>今すぐ再起動</value>
+    </data>
+    <data name="MsgAutoRestartOn" xml:space="preserve">
+        <value>クラッシュ時の自動再起動を有効にしました。</value>
+    </data>
+    <data name="MsgAutoRestartOff" xml:space="preserve">
+        <value>クラッシュ時の自動再起動を無効にしました。</value>
+    </data>
+    <data name="RotateTargetLabel" xml:space="preserve">
+        <value>回転対象：</value>
+    </data>
+    <data name="PrimaryMonitor" xml:space="preserve">
+        <value>メイン</value>
+    </data>
+    <data name="Deg180" xml:space="preserve">
+        <value>180°</value>
+    </data>
+    <data name="SensorFlipped" xml:space="preserve">
+        <value>反転（180°）</value>
+    </data>
+    <data name="SensorNote.Text" xml:space="preserve">
+        <value>読み取り専用ビュー — 回転や壁紙は変更されません。</value>
+    </data>
+    <data name="StatusStopped" xml:space="preserve">
+        <value>停止中</value>
+    </data>
+    <data name="StatusConnected" xml:space="preserve">
+        <value>接続中：{0}</value>
+    </data>
+    <data name="StatusDisconnected" xml:space="preserve">
+        <value>未接続</value>
+    </data>
+    <data name="PortStart" xml:space="preserve">
+        <value>監視開始</value>
+    </data>
+    <data name="PortStop" xml:space="preserve">
+        <value>監視停止</value>
+    </data>
+    <data name="Deg90" xml:space="preserve">
+        <value>90°</value>
+    </data>
+    <data name="Deg270" xml:space="preserve">
+        <value>270°</value>
+    </data>
+    <data name="LangSystem" xml:space="preserve">
+        <value>システム既定</value>
+    </data>
+    <data name="MsgSettingsSaved" xml:space="preserve">
+        <value>設定を保存しました：{0}</value>
+    </data>
+    <data name="MsgPorts" xml:space="preserve">
+        <value>ポート：{0}</value>
+    </data>
+    <data name="MsgStopping" xml:space="preserve">
+        <value>停止中...</value>
+    </data>
+    <data name="MsgOpenSensor" xml:space="preserve">
+        <value>読み取り専用のセンサービューを開きます：{0}（変更は適用されません）</value>
+    </data>
+    <data name="MsgPickPortFirst" xml:space="preserve">
+        <value>まずCOMポートを選択してください。</value>
+    </data>
+    <data name="MsgStoppingSerial" xml:space="preserve">
+        <value>シリアルポートを解放するため監視を停止しています...</value>
+    </data>
+    <data name="MsgSerialOpen" xml:space="preserve">
+        <value>シリアル {0} を開きました</value>
+    </data>
+    <data name="MsgSerialError" xml:space="preserve">
+        <value>シリアルエラー：{0}</value>
+    </data>
+    <data name="MsgBaseline" xml:space="preserve">
+        <value>初期状態 {0} を取得しました（起動時適用オフ）</value>
+    </data>
+    <data name="MsgApplyingRotation" xml:space="preserve">
+        <value>回転を適用中 dmdo={0}</value>
+    </data>
+    <data name="MsgAppliedLandscape" xml:space="preserve">
+        <value>横向きを適用しました</value>
+    </data>
+    <data name="MsgAppliedPortrait" xml:space="preserve">
+        <value>縦向きを適用しました</value>
+    </data>
+    <data name="MsgWallpaperNotFound" xml:space="preserve">
+        <value>壁紙が見つかりません：{0}</value>
+    </data>
+    <data name="MsgWallpaperBoth" xml:space="preserve">
+        <value>壁紙（両方）：{0}</value>
+    </data>
+    <data name="MsgWallpaperMain" xml:space="preserve">
+        <value>壁紙（メインのみ）：{0}</value>
+    </data>
+    <data name="MsgApplyFailed" xml:space="preserve">
+        <value>適用に失敗しました：{0}</value>
+    </data>
+    <data name="MsgDispChange" xml:space="preserve">
+        <value>ChangeDisplaySettingsEx の戻り値 {0}</value>
+    </data>
+    <data name="MsgRestart" xml:space="preserve">
+        <value>再起動</value>
+    </data>
+    <data name="MsgCancel" xml:space="preserve">
+        <value>キャンセル</value>
+    </data>
+    <data name="MsgLanguageChangedTitle" xml:space="preserve">
+        <value>再起動が必要です</value>
+    </data>
+    <data name="MsgLanguageChangedBody" xml:space="preserve">
+        <value>言語は再起動後に適用されます。すぐに再起動しますか？</value>
+    </data>
+    <data name="SensorTitle" xml:space="preserve">
+        <value>センサーテスト（読み取り専用）</value>
+    </data>
+    <data name="SensorLandscape" xml:space="preserve">
+        <value>横向き</value>
+    </data>
+    <data name="SensorPortrait90" xml:space="preserve">
+        <value>縦向き（90°）</value>
+    </data>
+    <data name="SensorPortrait270" xml:space="preserve">
+        <value>縦向き（270°）</value>
+    </data>
+    <data name="SensorBetween" xml:space="preserve">
+        <value>中間位置</value>
+    </data>
+    <data name="SensorNoData" xml:space="preserve">
+        <value>データなし</value>
+    </data>
+    <data name="SensorConnecting" xml:space="preserve">
+        <value>{0} に接続中...</value>
+    </data>
+    <data name="SensorConnected" xml:space="preserve">
+        <value>接続済み：{0}</value>
+    </data>
+    <data name="SensorClosed" xml:space="preserve">
+        <value>終了</value>
+    </data>
+    <data name="SensorError" xml:space="preserve">
+        <value>シリアルエラー：{0}</value>
+    </data>
+    <data name="PortConnect" xml:space="preserve">
+        <value>接続</value>
+    </data>
+    <data name="PortDisconnect" xml:space="preserve">
+        <value>切断</value>
+    </data>
+    <data name="MsgConnectFirst" xml:space="preserve">
+        <value>先にCOMポートへ接続してください。</value>
+    </data>
+    <data name="AutoConnect" xml:space="preserve">
+        <value>起動時に自動接続</value>
+    </data>
+    <data name="NavAbout" xml:space="preserve">
+        <value>バージョン情報</value>
+    </data>
+    <data name="AboutVersion" xml:space="preserve">
+        <value>バージョン：{0}</value>
+    </data>
+    <data name="AboutRepo" xml:space="preserve">
+        <value>GitHub リポジトリ</value>
+    </data>
+    <data name="CheckUpdates" xml:space="preserve">
+        <value>更新を確認</value>
+    </data>
+    <data name="UpToDate" xml:space="preserve">
+        <value>最新バージョンです。</value>
+    </data>
+    <data name="UpdateAvailable" xml:space="preserve">
+        <value>バージョン {0} が利用可能です。</value>
+    </data>
+    <data name="UpdateFailed" xml:space="preserve">
+        <value>更新を確認できませんでした。</value>
+    </data>
+    <data name="AboutNotConfigured" xml:space="preserve">
+        <value>更新確認を有効にするにはソースでリポジトリURLを設定してください。</value>
+    </data>
+    <data name="TrayShow" xml:space="preserve">
+        <value>表示</value>
+    </data>
+    <data name="TrayExit" xml:space="preserve">
+        <value>終了</value>
+    </data>
+    <data name="TrayHint" xml:space="preserve">
+        <value>Rotary はトレイで実行中です。</value>
+    </data>
+</root>

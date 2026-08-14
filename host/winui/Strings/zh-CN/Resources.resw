@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="AppTitle.Title" xml:space="preserve">
+        <value>Rotary</value>
+    </data>
+    <data name="SerialHeader.Text" xml:space="preserve">
+        <value>串口</value>
+    </data>
+    <data name="PortLabel.Text" xml:space="preserve">
+        <value>端口：</value>
+    </data>
+    <data name="RefreshButton.Content" xml:space="preserve">
+        <value>刷新</value>
+    </data>
+    <data name="StartButton.Content" xml:space="preserve">
+        <value>开始监控</value>
+    </data>
+    <data name="SensorButton.Content" xml:space="preserve">
+        <value>传感器视图...</value>
+    </data>
+    <data name="StatusText.Text" xml:space="preserve">
+        <value>已停止</value>
+    </data>
+    <data name="WallpaperHeader.Text" xml:space="preserve">
+        <value>壁纸</value>
+    </data>
+    <data name="ModeBothRadio.Content" xml:space="preserve">
+        <value>所有显示器</value>
+    </data>
+    <data name="ModeMainRadio.Content" xml:space="preserve">
+        <value>仅旋转显示器</value>
+    </data>
+    <data name="WallpaperHint" xml:space="preserve">
+        <value>每台显示器会使用与自身方向匹配的图片——横屏用横屏图，竖屏用竖屏图。</value>
+    </data>
+    <data name="LandscapeLabel.Text" xml:space="preserve">
+        <value>横屏：</value>
+    </data>
+    <data name="PortraitLabel.Text" xml:space="preserve">
+        <value>竖屏：</value>
+    </data>
+    <data name="SecondaryLabel.Text" xml:space="preserve">
+        <value>辅助颜色：</value>
+    </data>
+    <data name="MappingHeader.Text" xml:space="preserve">
+        <value>映射</value>
+    </data>
+    <data name="State1Label.Text" xml:space="preserve">
+        <value>竖屏方向 1 → 旋转为：</value>
+    </data>
+    <data name="State3Label.Text" xml:space="preserve">
+        <value>竖屏方向 2 → 旋转为：</value>
+    </data>
+    <data name="MappingHint" xml:space="preserve">
+        <value>校准可设置传感器安装偏移。横屏为 0°，右边缘朝下为 90°，倒置为 180°，左边缘朝下为 270°。</value>
+    </data>
+    <data name="CalButton" xml:space="preserve">
+        <value>校准...</value>
+    </data>
+    <data name="CalStatus" xml:space="preserve">
+        <value>安装偏移：{0}°</value>
+    </data>
+    <data name="CalNotCalibrated" xml:space="preserve">
+        <value>未校准（默认 0°）</value>
+    </data>
+    <data name="CalTitle" xml:space="preserve">
+        <value>校准安装方向</value>
+    </data>
+    <data name="CalIntro" xml:space="preserve">
+        <value>将传感器装置固定到显示器上，保持显示器为横屏。</value>
+    </data>
+    <data name="CalChoose" xml:space="preserve">
+        <value>选择将要旋转的方向，旋转显示器到该位置，然后点击“捕获”。</value>
+    </data>
+    <data name="CalCapture" xml:space="preserve">
+        <value>捕获方向</value>
+    </data>
+    <data name="CalDone" xml:space="preserve">
+        <value>校准完成。安装偏移：{0}°</value>
+    </data>
+    <data name="CalLive" xml:space="preserve">
+        <value>当前角度：</value>
+    </data>
+    <data name="CalFinish" xml:space="preserve">
+        <value>完成</value>
+    </data>
+    <data name="CalNoData" xml:space="preserve">
+        <value>正在等待传感器数据...</value>
+    </data>
+    <data name="TestHeader.Text" xml:space="preserve">
+        <value>测试（立即旋转）</value>
+    </data>
+    <data name="TestLandscapeButton.Content" xml:space="preserve">
+        <value>横屏</value>
+    </data>
+    <data name="TestPortrait90Button.Content" xml:space="preserve">
+        <value>竖屏 90</value>
+    </data>
+    <data name="TestPortrait270Button.Content" xml:space="preserve">
+        <value>竖屏 270</value>
+    </data>
+    <data name="TestFlippedButton.Content" xml:space="preserve">
+        <value>翻转 180</value>
+    </data>
+    <data name="ApplyOnStartupCheck.Content" xml:space="preserve">
+        <value>启动时应用当前方向</value>
+    </data>
+    <data name="LanguageLabel.Text" xml:space="preserve">
+        <value>语言：</value>
+    </data>
+    <data name="SaveButton.Content" xml:space="preserve">
+        <value>保存设置</value>
+    </data>
+    <data name="LogHeader.Text" xml:space="preserve">
+        <value>日志</value>
+    </data>
+    <data name="OptionsHeader" xml:space="preserve">
+        <value>选项</value>
+    </data>
+    <data name="StartWithWindows" xml:space="preserve">
+        <value>随 Windows 启动</value>
+    </data>
+    <data name="AppSubtitle" xml:space="preserve">
+        <value>显示器旋转切换 · D1 Mini + BMI160</value>
+    </data>
+    <data name="MsgStartupOn" xml:space="preserve">
+        <value>已启用随 Windows 启动。</value>
+    </data>
+    <data name="MsgStartupOff" xml:space="preserve">
+        <value>已禁用随 Windows 启动。</value>
+    </data>
+    <data name="MsgPickPortTitle" xml:space="preserve">
+        <value>没有串口</value>
+    </data>
+    <data name="MsgAutoPickedPort" xml:space="preserve">
+        <value>已自动选择串口 {0}。</value>
+    </data>
+    <data name="MsgCloseSensorFirst" xml:space="preserve">
+        <value>请先关闭传感器视图再开始监控。</value>
+    </data>
+    <data name="NavMonitor" xml:space="preserve">
+        <value>监控</value>
+    </data>
+    <data name="NavWallpaper" xml:space="preserve">
+        <value>壁纸</value>
+    </data>
+    <data name="NavOptions" xml:space="preserve">
+        <value>选项</value>
+    </data>
+    <data name="NavLog" xml:space="preserve">
+        <value>日志</value>
+    </data>
+    <data name="AutoRestart" xml:space="preserve">
+        <value>崩溃时自动重启</value>
+    </data>
+    <data name="RestartNow" xml:space="preserve">
+        <value>立即重启</value>
+    </data>
+    <data name="MsgAutoRestartOn" xml:space="preserve">
+        <value>已启用崩溃时自动重启。</value>
+    </data>
+    <data name="MsgAutoRestartOff" xml:space="preserve">
+        <value>已禁用崩溃时自动重启。</value>
+    </data>
+    <data name="RotateTargetLabel" xml:space="preserve">
+        <value>旋转目标：</value>
+    </data>
+    <data name="PrimaryMonitor" xml:space="preserve">
+        <value>主屏</value>
+    </data>
+    <data name="Deg180" xml:space="preserve">
+        <value>180°</value>
+    </data>
+    <data name="SensorFlipped" xml:space="preserve">
+        <value>翻转（180°）</value>
+    </data>
+    <data name="SensorNote.Text" xml:space="preserve">
+        <value>只读视图 — 不会旋转显示器或更改壁纸。</value>
+    </data>
+    <data name="StatusStopped" xml:space="preserve">
+        <value>已停止</value>
+    </data>
+    <data name="StatusConnected" xml:space="preserve">
+        <value>已连接：{0}</value>
+    </data>
+    <data name="StatusDisconnected" xml:space="preserve">
+        <value>未连接</value>
+    </data>
+    <data name="PortStart" xml:space="preserve">
+        <value>开始监控</value>
+    </data>
+    <data name="PortStop" xml:space="preserve">
+        <value>停止监控</value>
+    </data>
+    <data name="Deg90" xml:space="preserve">
+        <value>90°</value>
+    </data>
+    <data name="Deg270" xml:space="preserve">
+        <value>270°</value>
+    </data>
+    <data name="LangSystem" xml:space="preserve">
+        <value>系统默认</value>
+    </data>
+    <data name="MsgSettingsSaved" xml:space="preserve">
+        <value>设置已保存到 {0}</value>
+    </data>
+    <data name="MsgPorts" xml:space="preserve">
+        <value>端口：{0}</value>
+    </data>
+    <data name="MsgStopping" xml:space="preserve">
+        <value>正在停止...</value>
+    </data>
+    <data name="MsgOpenSensor" xml:space="preserve">
+        <value>正在打开只读传感器视图 {0}（不应用任何更改）。</value>
+    </data>
+    <data name="MsgPickPortFirst" xml:space="preserve">
+        <value>请先选择串口。</value>
+    </data>
+    <data name="MsgStoppingSerial" xml:space="preserve">
+        <value>正在停止监控以释放串口...</value>
+    </data>
+    <data name="MsgSerialOpen" xml:space="preserve">
+        <value>串口 {0} 已打开</value>
+    </data>
+    <data name="MsgSerialError" xml:space="preserve">
+        <value>串口错误：{0}</value>
+    </data>
+    <data name="MsgBaseline" xml:space="preserve">
+        <value>已捕获初始状态 {0}（未开启启动应用）</value>
+    </data>
+    <data name="MsgApplyingRotation" xml:space="preserve">
+        <value>正在应用旋转 dmdo={0}</value>
+    </data>
+    <data name="MsgAppliedLandscape" xml:space="preserve">
+        <value>已应用横屏</value>
+    </data>
+    <data name="MsgAppliedPortrait" xml:space="preserve">
+        <value>已应用竖屏</value>
+    </data>
+    <data name="MsgWallpaperNotFound" xml:space="preserve">
+        <value>壁纸文件不存在：{0}</value>
+    </data>
+    <data name="MsgWallpaperBoth" xml:space="preserve">
+        <value>壁纸（两台）：{0}</value>
+    </data>
+    <data name="MsgWallpaperMain" xml:space="preserve">
+        <value>壁纸（仅主屏）：{0}</value>
+    </data>
+    <data name="MsgApplyFailed" xml:space="preserve">
+        <value>应用失败：{0}</value>
+    </data>
+    <data name="MsgDispChange" xml:space="preserve">
+        <value>ChangeDisplaySettingsEx 返回 {0}</value>
+    </data>
+    <data name="MsgRestart" xml:space="preserve">
+        <value>立即重启</value>
+    </data>
+    <data name="MsgCancel" xml:space="preserve">
+        <value>取消</value>
+    </data>
+    <data name="MsgLanguageChangedTitle" xml:space="preserve">
+        <value>需要重启</value>
+    </data>
+    <data name="MsgLanguageChangedBody" xml:space="preserve">
+        <value>语言将在重启后生效。立即重启？</value>
+    </data>
+    <data name="SensorTitle" xml:space="preserve">
+        <value>传感器测试（只读）</value>
+    </data>
+    <data name="SensorLandscape" xml:space="preserve">
+        <value>横屏</value>
+    </data>
+    <data name="SensorPortrait90" xml:space="preserve">
+        <value>竖屏（90°）</value>
+    </data>
+    <data name="SensorPortrait270" xml:space="preserve">
+        <value>竖屏（270°）</value>
+    </data>
+    <data name="SensorBetween" xml:space="preserve">
+        <value>中间位置</value>
+    </data>
+    <data name="SensorNoData" xml:space="preserve">
+        <value>无数据</value>
+    </data>
+    <data name="SensorConnecting" xml:space="preserve">
+        <value>正在连接 {0}...</value>
+    </data>
+    <data name="SensorConnected" xml:space="preserve">
+        <value>已连接：{0}</value>
+    </data>
+    <data name="SensorClosed" xml:space="preserve">
+        <value>已关闭</value>
+    </data>
+    <data name="SensorError" xml:space="preserve">
+        <value>串口错误：{0}</value>
+    </data>
+    <data name="PortConnect" xml:space="preserve">
+        <value>连接</value>
+    </data>
+    <data name="PortDisconnect" xml:space="preserve">
+        <value>断开</value>
+    </data>
+    <data name="MsgConnectFirst" xml:space="preserve">
+        <value>请先连接串口。</value>
+    </data>
+    <data name="AutoConnect" xml:space="preserve">
+        <value>启动时自动连接</value>
+    </data>
+    <data name="NavAbout" xml:space="preserve">
+        <value>关于</value>
+    </data>
+    <data name="AboutVersion" xml:space="preserve">
+        <value>版本：{0}</value>
+    </data>
+    <data name="AboutRepo" xml:space="preserve">
+        <value>GitHub 仓库</value>
+    </data>
+    <data name="CheckUpdates" xml:space="preserve">
+        <value>检查更新</value>
+    </data>
+    <data name="UpToDate" xml:space="preserve">
+        <value>已是最新版本。</value>
+    </data>
+    <data name="UpdateAvailable" xml:space="preserve">
+        <value>发现新版本 {0}。</value>
+    </data>
+    <data name="UpdateFailed" xml:space="preserve">
+        <value>无法检查更新。</value>
+    </data>
+    <data name="AboutNotConfigured" xml:space="preserve">
+        <value>请在源码中设置仓库地址以启用更新检查。</value>
+    </data>
+    <data name="TrayShow" xml:space="preserve">
+        <value>显示</value>
+    </data>
+    <data name="TrayExit" xml:space="preserve">
+        <value>退出</value>
+    </data>
+    <data name="TrayHint" xml:space="preserve">
+        <value>Rotary 仍在托盘运行中。</value>
+    </data>
+</root>

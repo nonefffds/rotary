@@ -1,0 +1,4 @@
+host/winui/bin/
+host/winui/obj/
+host/winui/dist/
+host/winui/*.user

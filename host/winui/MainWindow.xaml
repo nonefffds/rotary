@@ -1,0 +1,296 @@
+﻿<Window
+    x:Class="RotaryMonitor.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- App header -->
+        <StackPanel Orientation="Horizontal" Spacing="14" Padding="28,18,28,10">
+            <Border Width="44" Height="44" CornerRadius="22"
+                    Background="{ThemeResource AccentFillColorDefaultBrush}">
+                <FontIcon Glyph="&#xE7F4;" FontSize="22" Foreground="White"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel VerticalAlignment="Center" Spacing="2">
+                <TextBlock x:Name="TitleText" Style="{StaticResource TitleTextBlockStyle}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <NavigationView Grid.Row="1" x:Name="Nav" PaneDisplayMode="Left"
+                        IsSettingsVisible="False" IsBackButtonVisible="Collapsed"
+                        SelectionChanged="OnNavSelection">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="NavMonitor" Tag="monitor">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7F4;" FontSize="16"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavWallpaper" Tag="wallpaper">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE91B;" FontSize="16"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavOptions" Tag="options">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" FontSize="16"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavLog" Tag="log">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7C1;" FontSize="16"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavAbout" Tag="about">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE946;" FontSize="16"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Grid>
+
+                <!-- Monitor page -->
+                <ScrollViewer x:Name="MonitorScroll" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="16" MaxWidth="760" HorizontalAlignment="Left" Padding="0,0,0,24">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="14">
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                        <Border Width="4" Height="18" CornerRadius="2"
+                                                Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="SerialHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <Button x:Name="SensorButton" Click="OnSensorClick" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE790;" FontSize="14"/>
+                                            <TextBlock x:Name="SensorButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock x:Name="PortLabelText" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="PortCombo" MinWidth="150"/>
+                                    <Button x:Name="RefreshButton" Click="OnRefreshClick">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                                            <TextBlock x:Name="RefreshButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button x:Name="ConnectButton" Click="OnConnectClick">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE7F8;" FontSize="14"/>
+                                            <TextBlock x:Name="ConnectButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button x:Name="StartButton" Click="OnStartClick"
+                                            Style="{StaticResource AccentButtonStyle}" MinWidth="150">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE768;" FontSize="14" x:Name="StartGlyph"/>
+                                            <TextBlock x:Name="StartButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                                <InfoBar x:Name="StatusInfo" IsClosable="True"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="MappingHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock x:Name="RotateTargetLabelText" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="RotateTargetCombo" MinWidth="260"/>
+                                </StackPanel>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="CalStatusText" VerticalAlignment="Center" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Button Grid.Column="1" x:Name="CalibrateButton" Click="OnCalibrateClick">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE7AD;" FontSize="14"/>
+                                            <TextBlock x:Name="CalibrateButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                                <TextBlock x:Name="MappingHintText" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TestHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Button x:Name="TestLandscapeButton" Click="OnTest0" MinWidth="100"/>
+                                    <Button x:Name="TestPortrait90Button" Click="OnTest90" MinWidth="100"/>
+                                    <Button x:Name="TestFlippedButton" Click="OnTest180" MinWidth="100"/>
+                                    <Button x:Name="TestPortrait270Button" Click="OnTest270" MinWidth="100"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Wallpaper page -->
+                <ScrollViewer x:Name="WallpaperScroll" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <StackPanel Spacing="16" MaxWidth="760" HorizontalAlignment="Left" Padding="0,0,0,24">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="14">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="WallpaperHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <RadioButtons x:Name="ModeRadio" MaxColumns="2"/>
+                                <Grid ColumnSpacing="10" RowSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock x:Name="LandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="LandscapeBox" PlaceholderText="C:\Pictures\..."/>
+                                    <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseLandscape" MinWidth="48"/>
+                                    <TextBlock x:Name="PortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="PortraitBox" PlaceholderText="C:\Pictures\..."/>
+                                    <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowsePortrait" MinWidth="48"/>
+                                    <TextBlock x:Name="SecondaryLabelText" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                                        <Button x:Name="ColorButton" Click="OnColorClick" Width="104" Height="30" Padding="0">
+                                            <Border x:Name="ColorSwatch" Background="#FF000000" CornerRadius="5" Width="96" Height="22"/>
+                                        </Button>
+                                        <TextBlock x:Name="ColorValue" VerticalAlignment="Center"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock x:Name="WallpaperHintText" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Options page -->
+                <ScrollViewer x:Name="OptionsScroll" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <StackPanel Spacing="16" MaxWidth="760" HorizontalAlignment="Left" Padding="0,0,0,24">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="OptionsHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <CheckBox x:Name="ApplyOnStartupCheck"/>
+                                <CheckBox x:Name="StartWithWindowsCheck" Checked="OnStartupChanged" Unchecked="OnStartupChanged"/>
+                                <CheckBox x:Name="AutoConnectCheck" Checked="OnAutoConnectChanged" Unchecked="OnAutoConnectChanged"/>
+                                <CheckBox x:Name="AutoRestartCheck" Checked="OnAutoRestartChanged" Unchecked="OnAutoRestartChanged"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock x:Name="LanguageLabelText" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="LanguageCombo" MinWidth="140" SelectionChanged="OnLanguageChanged"/>
+                                    <Button x:Name="SaveButton" Click="OnSaveClick" Style="{StaticResource AccentButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74E;" FontSize="14"/>
+                                            <TextBlock x:Name="SaveButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button x:Name="RestartButton" Click="OnRestartClick">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                                            <TextBlock x:Name="RestartButtonText"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Log page -->
+                <ScrollViewer x:Name="LogScroll" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <StackPanel Spacing="16" MaxWidth="760" HorizontalAlignment="Left" Padding="0,0,0,24">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="10">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="LogHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <Border BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1"
+                                        CornerRadius="8" Padding="10">
+                                    <ScrollViewer x:Name="LogTextScroll" VerticalScrollBarVisibility="Auto" MaxHeight="360">
+                                        <TextBlock x:Name="LogText" TextWrapping="Wrap"
+                                                   FontFamily="Consolas" FontSize="12"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- About page -->
+                <ScrollViewer x:Name="AboutScroll" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                    <StackPanel Spacing="16" MaxWidth="760" HorizontalAlignment="Left" Padding="0,0,0,24">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="12" Padding="20">
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="4" Height="18" CornerRadius="2"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="AboutHeaderText" FontSize="17" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <TextBlock x:Name="AboutVersionText"/>
+                                <HyperlinkButton x:Name="AboutRepoLink" Click="OnRepoClick"/>
+                                <Button x:Name="CheckUpdatesButton" Click="OnCheckUpdatesClick">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                                        <TextBlock x:Name="CheckUpdatesButtonText"/>
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock x:Name="UpdateResultText" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>

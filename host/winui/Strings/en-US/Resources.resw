@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="AppTitle.Title" xml:space="preserve">
+        <value>Rotary</value>
+    </data>
+    <data name="SerialHeader.Text" xml:space="preserve">
+        <value>Serial</value>
+    </data>
+    <data name="PortLabel.Text" xml:space="preserve">
+        <value>Port:</value>
+    </data>
+    <data name="RefreshButton.Content" xml:space="preserve">
+        <value>Refresh</value>
+    </data>
+    <data name="StartButton.Content" xml:space="preserve">
+        <value>Start monitoring</value>
+    </data>
+    <data name="SensorButton.Content" xml:space="preserve">
+        <value>Sensor view...</value>
+    </data>
+    <data name="StatusText.Text" xml:space="preserve">
+        <value>Stopped</value>
+    </data>
+    <data name="WallpaperHeader.Text" xml:space="preserve">
+        <value>Wallpaper</value>
+    </data>
+    <data name="ModeBothRadio.Content" xml:space="preserve">
+        <value>All monitors</value>
+    </data>
+    <data name="ModeMainRadio.Content" xml:space="preserve">
+        <value>Rotation monitor only</value>
+    </data>
+    <data name="WallpaperHint" xml:space="preserve">
+        <value>Each monitor gets the image matching its own orientation — landscape for horizontal, portrait for vertical.</value>
+    </data>
+    <data name="LandscapeLabel.Text" xml:space="preserve">
+        <value>Landscape:</value>
+    </data>
+    <data name="PortraitLabel.Text" xml:space="preserve">
+        <value>Portrait:</value>
+    </data>
+    <data name="SecondaryLabel.Text" xml:space="preserve">
+        <value>Secondary color:</value>
+    </data>
+    <data name="MappingHeader.Text" xml:space="preserve">
+        <value>Mapping</value>
+    </data>
+    <data name="State1Label.Text" xml:space="preserve">
+        <value>Portrait direction 1 -&gt; rotate to:</value>
+    </data>
+    <data name="State3Label.Text" xml:space="preserve">
+        <value>Portrait direction 2 -&gt; rotate to:</value>
+    </data>
+    <data name="MappingHint" xml:space="preserve">
+        <value>Calibration sets the accessory’s mounting offset. Upright = 0°, right edge down = 90°, upside down = 180°, left edge down = 270°.</value>
+    </data>
+    <data name="CalButton" xml:space="preserve">
+        <value>Calibrate...</value>
+    </data>
+    <data name="CalStatus" xml:space="preserve">
+        <value>Mounting offset: {0}°</value>
+    </data>
+    <data name="CalNotCalibrated" xml:space="preserve">
+        <value>Not calibrated (default 0°)</value>
+    </data>
+    <data name="CalTitle" xml:space="preserve">
+        <value>Calibrate mounting orientation</value>
+    </data>
+    <data name="CalIntro" xml:space="preserve">
+        <value>Attach the accessory to the monitor, keeping the monitor horizontal (landscape).</value>
+    </data>
+    <data name="CalChoose" xml:space="preserve">
+        <value>Choose the direction you will rotate the monitor, rotate it to that position, then press Capture.</value>
+    </data>
+    <data name="CalCapture" xml:space="preserve">
+        <value>Capture orientation</value>
+    </data>
+    <data name="CalDone" xml:space="preserve">
+        <value>Calibration complete. Mounting offset: {0}°</value>
+    </data>
+    <data name="CalLive" xml:space="preserve">
+        <value>Current angle:</value>
+    </data>
+    <data name="CalFinish" xml:space="preserve">
+        <value>Finish</value>
+    </data>
+    <data name="CalNoData" xml:space="preserve">
+        <value>Waiting for sensor data...</value>
+    </data>
+    <data name="TestHeader.Text" xml:space="preserve">
+        <value>Test (applies rotation immediately)</value>
+    </data>
+    <data name="TestLandscapeButton.Content" xml:space="preserve">
+        <value>Landscape</value>
+    </data>
+    <data name="TestPortrait90Button.Content" xml:space="preserve">
+        <value>Portrait 90</value>
+    </data>
+    <data name="TestPortrait270Button.Content" xml:space="preserve">
+        <value>Portrait 270</value>
+    </data>
+    <data name="TestFlippedButton.Content" xml:space="preserve">
+        <value>Flipped 180</value>
+    </data>
+    <data name="ApplyOnStartupCheck.Content" xml:space="preserve">
+        <value>Apply current orientation when the app starts</value>
+    </data>
+    <data name="LanguageLabel.Text" xml:space="preserve">
+        <value>Language:</value>
+    </data>
+    <data name="SaveButton.Content" xml:space="preserve">
+        <value>Save settings</value>
+    </data>
+    <data name="LogHeader.Text" xml:space="preserve">
+        <value>Log</value>
+    </data>
+    <data name="OptionsHeader" xml:space="preserve">
+        <value>Options</value>
+    </data>
+    <data name="StartWithWindows" xml:space="preserve">
+        <value>Start with Windows</value>
+    </data>
+    <data name="AppSubtitle" xml:space="preserve">
+        <value>Monitor rotation switch · D1 Mini + BMI160</value>
+    </data>
+    <data name="MsgStartupOn" xml:space="preserve">
+        <value>Start with Windows enabled.</value>
+    </data>
+    <data name="MsgStartupOff" xml:space="preserve">
+        <value>Start with Windows disabled.</value>
+    </data>
+    <data name="MsgPickPortTitle" xml:space="preserve">
+        <value>No COM port</value>
+    </data>
+    <data name="MsgAutoPickedPort" xml:space="preserve">
+        <value>Auto-picked port {0}.</value>
+    </data>
+    <data name="MsgCloseSensorFirst" xml:space="preserve">
+        <value>Close the sensor view before starting monitoring.</value>
+    </data>
+    <data name="NavMonitor" xml:space="preserve">
+        <value>Monitor</value>
+    </data>
+    <data name="NavWallpaper" xml:space="preserve">
+        <value>Wallpaper</value>
+    </data>
+    <data name="NavOptions" xml:space="preserve">
+        <value>Options</value>
+    </data>
+    <data name="NavLog" xml:space="preserve">
+        <value>Log</value>
+    </data>
+    <data name="AutoRestart" xml:space="preserve">
+        <value>Auto-restart on crash</value>
+    </data>
+    <data name="RestartNow" xml:space="preserve">
+        <value>Restart now</value>
+    </data>
+    <data name="MsgAutoRestartOn" xml:space="preserve">
+        <value>Auto-restart on crash enabled.</value>
+    </data>
+    <data name="MsgAutoRestartOff" xml:space="preserve">
+        <value>Auto-restart on crash disabled.</value>
+    </data>
+    <data name="RotateTargetLabel" xml:space="preserve">
+        <value>Rotation target:</value>
+    </data>
+    <data name="PrimaryMonitor" xml:space="preserve">
+        <value>primary</value>
+    </data>
+    <data name="Deg180" xml:space="preserve">
+        <value>180°</value>
+    </data>
+    <data name="SensorFlipped" xml:space="preserve">
+        <value>Flipped (180°)</value>
+    </data>
+    <data name="SensorNote.Text" xml:space="preserve">
+        <value>Read-only view — Windows rotation / wallpaper are NOT changed.</value>
+    </data>
+    <data name="StatusStopped" xml:space="preserve">
+        <value>Stopped</value>
+    </data>
+    <data name="StatusConnected" xml:space="preserve">
+        <value>Connected: {0}</value>
+    </data>
+    <data name="StatusDisconnected" xml:space="preserve">
+        <value>Disconnected</value>
+    </data>
+    <data name="PortStart" xml:space="preserve">
+        <value>Start monitoring</value>
+    </data>
+    <data name="PortStop" xml:space="preserve">
+        <value>Stop monitoring</value>
+    </data>
+    <data name="Deg90" xml:space="preserve">
+        <value>90°</value>
+    </data>
+    <data name="Deg270" xml:space="preserve">
+        <value>270°</value>
+    </data>
+    <data name="LangSystem" xml:space="preserve">
+        <value>System default</value>
+    </data>
+    <data name="MsgSettingsSaved" xml:space="preserve">
+        <value>Settings saved to {0}</value>
+    </data>
+    <data name="MsgPorts" xml:space="preserve">
+        <value>Ports: {0}</value>
+    </data>
+    <data name="MsgStopping" xml:space="preserve">
+        <value>Stopping...</value>
+    </data>
+    <data name="MsgOpenSensor" xml:space="preserve">
+        <value>Opening read-only sensor view on {0} (no changes applied).</value>
+    </data>
+    <data name="MsgPickPortFirst" xml:space="preserve">
+        <value>Pick a COM port first.</value>
+    </data>
+    <data name="MsgStoppingSerial" xml:space="preserve">
+        <value>Stopping monitoring to free the serial port...</value>
+    </data>
+    <data name="MsgSerialOpen" xml:space="preserve">
+        <value>Serial {0} open</value>
+    </data>
+    <data name="MsgSerialError" xml:space="preserve">
+        <value>Serial error: {0}</value>
+    </data>
+    <data name="MsgBaseline" xml:space="preserve">
+        <value>Baseline state {0} captured (apply-on-startup off)</value>
+    </data>
+    <data name="MsgApplyingRotation" xml:space="preserve">
+        <value>Applying rotation dmdo={0}</value>
+    </data>
+    <data name="MsgAppliedLandscape" xml:space="preserve">
+        <value>Applied landscape</value>
+    </data>
+    <data name="MsgAppliedPortrait" xml:space="preserve">
+        <value>Applied portrait</value>
+    </data>
+    <data name="MsgWallpaperNotFound" xml:space="preserve">
+        <value>Wallpaper not found: {0}</value>
+    </data>
+    <data name="MsgWallpaperBoth" xml:space="preserve">
+        <value>Wallpaper (both): {0}</value>
+    </data>
+    <data name="MsgWallpaperMain" xml:space="preserve">
+        <value>Wallpaper (main only): {0}</value>
+    </data>
+    <data name="MsgApplyFailed" xml:space="preserve">
+        <value>Apply failed: {0}</value>
+    </data>
+    <data name="MsgDispChange" xml:space="preserve">
+        <value>ChangeDisplaySettingsEx returned {0}</value>
+    </data>
+    <data name="MsgRestart" xml:space="preserve">
+        <value>Restart</value>
+    </data>
+    <data name="MsgCancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="MsgLanguageChangedTitle" xml:space="preserve">
+        <value>Restart required</value>
+    </data>
+    <data name="MsgLanguageChangedBody" xml:space="preserve">
+        <value>The language change applies after restart. Restart now?</value>
+    </data>
+    <data name="SensorTitle" xml:space="preserve">
+        <value>Sensor test (read-only)</value>
+    </data>
+    <data name="SensorLandscape" xml:space="preserve">
+        <value>Landscape</value>
+    </data>
+    <data name="SensorPortrait90" xml:space="preserve">
+        <value>Portrait (90°)</value>
+    </data>
+    <data name="SensorPortrait270" xml:space="preserve">
+        <value>Portrait (270°)</value>
+    </data>
+    <data name="SensorBetween" xml:space="preserve">
+        <value>Between positions</value>
+    </data>
+    <data name="SensorNoData" xml:space="preserve">
+        <value>no data</value>
+    </data>
+    <data name="SensorConnecting" xml:space="preserve">
+        <value>connecting to {0}...</value>
+    </data>
+    <data name="SensorConnected" xml:space="preserve">
+        <value>connected: {0}</value>
+    </data>
+    <data name="SensorClosed" xml:space="preserve">
+        <value>closed</value>
+    </data>
+    <data name="SensorError" xml:space="preserve">
+        <value>serial error: {0}</value>
+    </data>
+    <data name="PortConnect" xml:space="preserve">
+        <value>Connect</value>
+    </data>
+    <data name="PortDisconnect" xml:space="preserve">
+        <value>Disconnect</value>
+    </data>
+    <data name="MsgConnectFirst" xml:space="preserve">
+        <value>Connect to a COM port first.</value>
+    </data>
+    <data name="AutoConnect" xml:space="preserve">
+        <value>Auto-connect on startup</value>
+    </data>
+    <data name="NavAbout" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="AboutVersion" xml:space="preserve">
+        <value>Version: {0}</value>
+    </data>
+    <data name="AboutRepo" xml:space="preserve">
+        <value>GitHub repository</value>
+    </data>
+    <data name="CheckUpdates" xml:space="preserve">
+        <value>Check for updates</value>
+    </data>
+    <data name="UpToDate" xml:space="preserve">
+        <value>You have the latest version.</value>
+    </data>
+    <data name="UpdateAvailable" xml:space="preserve">
+        <value>Version {0} is available.</value>
+    </data>
+    <data name="UpdateFailed" xml:space="preserve">
+        <value>Could not check for updates.</value>
+    </data>
+    <data name="AboutNotConfigured" xml:space="preserve">
+        <value>Set your repository URL in the source to enable update checks.</value>
+    </data>
+    <data name="TrayShow" xml:space="preserve">
+        <value>Show</value>
+    </data>
+    <data name="TrayExit" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="TrayHint" xml:space="preserve">
+        <value>Rotary is still running in the tray.</value>
+    </data>
+</root>
