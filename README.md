@@ -1,5 +1,9 @@
 # Rotary
 
+<p align="center">
+  <img src="host/winui/Assets/rotary.webp" alt="Rotary logo" width="180"/>
+</p>
+
 Windows software for the **Rotary** monitor-rotation accessory. It connects to a
 D1 Mini + BMI160 sensor (see the [rotary-firmware](https://github.com/nonefffds/rotary-firmware)
 repo) over USB serial, and when you rotate your monitor it automatically:
