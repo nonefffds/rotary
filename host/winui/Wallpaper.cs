@@ -27,10 +27,11 @@ namespace RotaryMonitor
             int maxX = int.MinValue, maxY = int.MinValue;
             foreach (Win32.MonitorInfo m in monitors)
             {
-                minX = Math.Min(minX, m.Rect.Left);
-                minY = Math.Min(minY, m.Rect.Top);
-                maxX = Math.Max(maxX, m.Rect.Right);
-                maxY = Math.Max(maxY, m.Rect.Bottom);
+                Win32.RECT p = Win32.PhysicalRect(m);   // physical pixels (DPI-aware)
+                minX = Math.Min(minX, p.Left);
+                minY = Math.Min(minY, p.Top);
+                maxX = Math.Max(maxX, p.Right);
+                maxY = Math.Max(maxY, p.Bottom);
             }
 
             var canvas = new Bitmap(maxX - minX, maxY - minY);
@@ -63,23 +64,31 @@ namespace RotaryMonitor
                 string path = m.DeviceName == rotationTarget ? rotationImage : restImage;
                 if (string.IsNullOrEmpty(path) || !File.Exists(path))
                     continue;
-                int w = m.Rect.Right - m.Rect.Left;
-                int h = m.Rect.Bottom - m.Rect.Top;
+                Win32.RECT p = Win32.PhysicalRect(m);   // physical pixels (DPI-aware)
+                int w = p.Right - p.Left;
+                int h = p.Bottom - p.Top;
                 try
                 {
                     using (Image src = Image.FromFile(path))
                     {
+                        // cover-crop: upscale to cover the dest, then take a
+                        // centered w x h crop. The SOURCE rect must be expressed
+                        // in the ORIGINAL image pixels (srcW/srcH), not the dest.
                         float scale = Math.Max((float)w / src.Width, (float)h / src.Height);
                         int sw = (int)Math.Round(src.Width * scale);
                         int sh = (int)Math.Round(src.Height * scale);
                         int sx = (sw - w) / 2;
                         int sy = (sh - h) / 2;
+                        int srcW = (int)Math.Round(w / scale);
+                        int srcH = (int)Math.Round(h / scale);
+                        int srcX = (int)Math.Round(sx / scale);
+                        int srcY = (int)Math.Round(sy / scale);
                         using (var g = Graphics.FromImage(canvas))
                         {
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                             g.DrawImage(src,
-                                new Rectangle(m.Rect.Left - minX, m.Rect.Top - minY, w, h),
-                                new Rectangle(sx, sy, w, h), GraphicsUnit.Pixel);
+                                new Rectangle(p.Left - minX, p.Top - minY, w, h),
+                                new Rectangle(srcX, srcY, srcW, srcH), GraphicsUnit.Pixel);
                         }
                     }
                 }
