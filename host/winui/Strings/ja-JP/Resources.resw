@@ -399,4 +399,7 @@
     <data name="ViewLicenses" xml:space="preserve">
         <value>サードパーティーライセンス</value>
     </data>
+    <data name="SaveWallpaper" xml:space="preserve">
+        <value>壁紙を保存</value>
+    </data>
 </root>

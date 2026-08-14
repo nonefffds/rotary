@@ -198,10 +198,10 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
                                         <TextBlock x:Name="LandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LandscapeBox" PlaceholderText="C:\Pictures\..."/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LandscapeBox" PlaceholderText="C:\Pictures\..." TextChanged="OnWallpaperTextChanged"/>
                                         <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseLandscape" MinWidth="48"/>
                                         <TextBlock x:Name="PortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PortraitBox" PlaceholderText="C:\Pictures\..."/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PortraitBox" PlaceholderText="C:\Pictures\..." TextChanged="OnWallpaperTextChanged"/>
                                         <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowsePortrait" MinWidth="48"/>
                                     </Grid>
 
@@ -222,14 +222,21 @@
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
                                             <TextBlock x:Name="RestLandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="RestLandscapeBox" PlaceholderText="C:\Pictures\..."/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="RestLandscapeBox" PlaceholderText="C:\Pictures\..." TextChanged="OnWallpaperTextChanged"/>
                                             <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseRestLandscape" MinWidth="48"/>
                                             <TextBlock x:Name="RestPortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="RestPortraitBox" PlaceholderText="C:\Pictures\..."/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="RestPortraitBox" PlaceholderText="C:\Pictures\..." TextChanged="OnWallpaperTextChanged"/>
                                             <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowseRestPortrait" MinWidth="48"/>
                                         </Grid>
                                     </StackPanel>
                                 </StackPanel>
+                                <Button x:Name="SaveWallpaperButton" Click="OnSaveWallpaperClick"
+                                        HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE74E;" FontSize="14"/>
+                                        <TextBlock x:Name="SaveWallpaperButtonText"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </Border>
                     </StackPanel>

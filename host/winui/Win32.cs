@@ -102,6 +102,8 @@ namespace RotaryMonitor
             public RECT Rect;
             public bool IsPrimary;
             public string DeviceName = "";
+            public int DpiX = 96;
+            public int DpiY = 96;
         }
 
         public delegate bool MonitorEnumProc(IntPtr hMonitor, IntPtr hdc, ref RECT lprcMonitor, IntPtr lParam);
@@ -121,6 +123,9 @@ namespace RotaryMonitor
         [DllImport("user32.dll")]
         public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip,
             MonitorEnumProc lpfnEnum, IntPtr dwData);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr MonitorFromRect(ref RECT lprc, uint dwFlags);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFOEXW lpmi);
@@ -192,6 +197,9 @@ namespace RotaryMonitor
             return ChangeDisplaySettingsEx(device, ref dm, IntPtr.Zero, CDS_UPDATEREGISTRY, IntPtr.Zero);
         }
 
+        [DllImport("shcore.dll")]
+        public static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
+
         public static List<MonitorInfo> EnumMonitors()
         {
             var list = new List<MonitorInfo>();
@@ -201,17 +209,36 @@ namespace RotaryMonitor
                 mi.cbSize = (uint)Marshal.SizeOf(typeof(MONITORINFOEXW));
                 if (GetMonitorInfo(h, ref mi))
                 {
+                    uint dpiX = 96, dpiY = 96;
+                    try { GetDpiForMonitor(h, 0, out dpiX, out dpiY); } catch { }
                     list.Add(new MonitorInfo
                     {
                         Rect = mi.rcMonitor,
                         IsPrimary = (mi.dwFlags & MONITORINFOF_PRIMARY) != 0,
                         DeviceName = mi.szDevice,
+                        DpiX = (int)dpiX,
+                        DpiY = (int)dpiY,
                     });
                 }
                 return true;
             };
             EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, cb, IntPtr.Zero);
             return list;
+        }
+
+        /// <summary>Convert a logical monitor rect to physical pixels (DPI-aware).</summary>
+        public static RECT PhysicalRect(MonitorInfo m)
+        {
+            double sx = m.DpiX / 96.0;
+            double sy = m.DpiY / 96.0;
+            var r = new RECT
+            {
+                Left = (int)Math.Round(m.Rect.Left * sx),
+                Top = (int)Math.Round(m.Rect.Top * sy),
+                Right = (int)Math.Round(m.Rect.Right * sx),
+                Bottom = (int)Math.Round(m.Rect.Bottom * sy),
+            };
+            return r;
         }
 
         private static void SetWallpaperStyle(string style)

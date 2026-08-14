@@ -399,4 +399,7 @@
     <data name="ViewLicenses" xml:space="preserve">
         <value>Third-party licenses</value>
     </data>
+    <data name="SaveWallpaper" xml:space="preserve">
+        <value>Save wallpaper</value>
+    </data>
 </root>

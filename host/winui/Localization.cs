@@ -147,6 +147,7 @@ namespace RotaryMonitor
                 { "MsgWallpaperDisabled", "Wallpaper change is disabled." },
                 { "AboutFirmware", "Firmware repository" },
                 { "ViewLicenses", "Third-party licenses" },
+                { "SaveWallpaper", "Save wallpaper" },
                 } },
                 { "zh-CN", new Dictionary<string, string>
                 {
@@ -283,6 +284,7 @@ namespace RotaryMonitor
                 { "MsgWallpaperDisabled", "壁纸更换已禁用。" },
                 { "AboutFirmware", "固件仓库" },
                 { "ViewLicenses", "第三方许可证" },
+                { "SaveWallpaper", "保存壁纸" },
                 } },
                 { "ja-JP", new Dictionary<string, string>
                 {
@@ -419,6 +421,7 @@ namespace RotaryMonitor
                 { "MsgWallpaperDisabled", "壁紙の変更は無効です。" },
                 { "AboutFirmware", "ファームウェアリポジトリ" },
                 { "ViewLicenses", "サードパーティーライセンス" },
+                { "SaveWallpaper", "壁紙を保存" },
                 } },
             };
 

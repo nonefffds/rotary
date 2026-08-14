@@ -399,4 +399,7 @@
     <data name="ViewLicenses" xml:space="preserve">
         <value>第三方许可证</value>
     </data>
+    <data name="SaveWallpaper" xml:space="preserve">
+        <value>保存壁纸</value>
+    </data>
 </root>

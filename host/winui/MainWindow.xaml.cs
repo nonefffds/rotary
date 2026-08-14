@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
@@ -106,6 +107,7 @@ namespace RotaryMonitor
             FollowRotToggle.Header = L.Get("FollowRotWallpaper");
             RestLandscapeLabelText.Text = L.Get("RestLandscapeLabel");
             RestPortraitLabelText.Text = L.Get("RestPortraitLabel");
+            SaveWallpaperButtonText.Text = L.Get("SaveWallpaper");
 
             OptionsHeaderText.Text = L.Get("OptionsHeader");
             ApplyOnStartupCheck.Content = L.Get("ApplyOnStartupCheck.Content");
@@ -399,10 +401,10 @@ namespace RotaryMonitor
 
         private void OnSensorClick(object sender, RoutedEventArgs e) => OpenSensorView();
 
-        private void OnTest0(object sender, RoutedEventArgs e) => ApplyAndLog(0);
-        private void OnTest90(object sender, RoutedEventArgs e) => ApplyAndLog(1);
-        private void OnTest180(object sender, RoutedEventArgs e) => ApplyAndLog(2);
-        private void OnTest270(object sender, RoutedEventArgs e) => ApplyAndLog(3);
+        private void OnTest0(object sender, RoutedEventArgs e) { ReadConfigFromUi(); ApplyAndLog(0); }
+        private void OnTest90(object sender, RoutedEventArgs e) { ReadConfigFromUi(); ApplyAndLog(1); }
+        private void OnTest180(object sender, RoutedEventArgs e) { ReadConfigFromUi(); ApplyAndLog(2); }
+        private void OnTest270(object sender, RoutedEventArgs e) { ReadConfigFromUi(); ApplyAndLog(3); }
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
@@ -464,6 +466,24 @@ namespace RotaryMonitor
         private void OnWallpaperToggle(object sender, RoutedEventArgs e)
         {
             UpdateWallpaperVisibility();
+            SaveFromUi();
+        }
+
+        private void OnWallpaperTextChanged(object sender, TextChangedEventArgs e)
+        {
+            SaveFromUi();
+        }
+
+        private void OnSaveWallpaperClick(object sender, RoutedEventArgs e)
+        {
+            SaveFromUi();
+            SetStatusInfo(L.Get("MsgSettingsSaved"), InfoBarSeverity.Success);
+        }
+
+        private void SaveFromUi()
+        {
+            ReadConfigFromUi();
+            _cfg.Save(AppConfig.DefaultPath);
         }
 
         private void UpdateWallpaperVisibility()
@@ -899,17 +919,61 @@ namespace RotaryMonitor
             try
             {
                 string target = ResolveRotateTarget();
-                List<Win32.MonitorInfo> monitors = Win32.EnumMonitors();
+                bool rotIsPortrait = false;
+                try
+                {
+                    uint o = Win32.CurrentOrientation(target);
+                    rotIsPortrait = o == 1 || o == 3;
+                }
+                catch { }
+
+                string rotationImage = DesktopWallpaper.Pick(
+                    rotIsPortrait ? rotPort : rotLand,
+                    rotIsPortrait ? rotLand : rotPort, "");
+                string? restImage;
+                if (!_cfg.ChangeRestWallpaper)
+                    restImage = null;   // leave the other monitors untouched
+                else if (_cfg.RestFollowRotation)
+                    restImage = rotationImage;
+                else
+                    restImage = DesktopWallpaper.Pick(
+                        rotIsPortrait ? _cfg.RestPortraitWallpaper : _cfg.RestLandscapeWallpaper,
+                        rotIsPortrait ? _cfg.RestLandscapeWallpaper : _cfg.RestPortraitWallpaper, "");
+
                 string current = Win32.GetCurrentWallpaper();
-                Log("wallpaper: rot=" + target + " land=" + rotLand + " port=" + rotPort +
-                    " restChange=" + _cfg.ChangeRestWallpaper +
-                    " follow=" + _cfg.RestFollowRotation);
-                string tmp = Wallpaper.Compose(rotLand, rotPort,
-                    _cfg.RestLandscapeWallpaper, _cfg.RestPortraitWallpaper, current,
-                    monitors, target,
-                    _cfg.ChangeRestWallpaper, _cfg.RestFollowRotation);
-                Win32.SetWallpaper(tmp, "fill");
-                Log("wallpaper applied: " + tmp);
+
+                var dw = DesktopWallpaper.Create();
+                dw.SetPosition(DesktopWallpaperPosition.Fill);
+                uint count;
+                dw.GetMonitorDevicePathCount(out count);
+
+                for (uint i = 0; i < count; i++)
+                {
+                    string dev;
+                    dw.GetMonitorDevicePathAt(i, out dev);
+                    Win32.RECT r;
+                    dw.GetMonitorRECT(dev, out r);
+
+                    // map the COM monitor back to a display device name
+                    string displayName = "";
+                    IntPtr hmon = Win32.MonitorFromRect(ref r, 2); // MONITOR_DEFAULTTONEAREST
+                    var mi = new Win32.MONITORINFOEXW();
+                    mi.cbSize = (uint)Marshal.SizeOf(typeof(Win32.MONITORINFOEXW));
+                    if (Win32.GetMonitorInfo(hmon, ref mi))
+                        displayName = mi.szDevice;
+                    bool isRotation = displayName == target;
+
+                    string? image = isRotation ? rotationImage : restImage;
+                    if (image == null)
+                        continue;   // rest monitor: keep current wallpaper
+                    if (string.IsNullOrEmpty(image) || !System.IO.File.Exists(image))
+                        image = current;
+                    if (string.IsNullOrEmpty(image) || !System.IO.File.Exists(image))
+                        continue;
+                    dw.SetWallpaper(dev, image);
+                }
+                Marshal.FinalReleaseComObject(dw);
+                Log("wallpaper applied per monitor (rot=" + target + ")");
             }
             catch (Exception ex)
             {
