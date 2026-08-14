@@ -27,7 +27,8 @@ Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.i
 Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 
 [Files]
-Source: "..\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; rotary.config is a per-machine profile (calibration, COM port...) — never ship it
+Source: "..\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "rotary.config"
 
 [Icons]
 Name: "{group}\Rotary"; Filename: "{app}\{#MyAppExeName}"
