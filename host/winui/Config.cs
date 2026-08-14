@@ -8,9 +8,14 @@ namespace RotaryMonitor
     {
         public string ComPort = "COM3";
         public bool ApplyOnStartup = true;
-        public string WallpaperMode = "both";   // "both" or "main"
+        public string WallpaperMode = "both";   // legacy; migrated to the toggles below
+        public bool EnableWallpaper = true;
+        public bool ChangeRestWallpaper = false;
+        public bool RestFollowRotation = false;
         public string LandscapeWallpaper = "";
         public string PortraitWallpaper = "";
+        public string RestLandscapeWallpaper = "";
+        public string RestPortraitWallpaper = "";
         public string SecondaryColor = "#000000";
         public int State1To = 1;   // firmware state 1 -> dmdo (1 or 3)
         public int State3To = 3;   // firmware state 3 -> dmdo (1 or 3)
@@ -31,6 +36,7 @@ namespace RotaryMonitor
             var c = new AppConfig();
             if (!File.Exists(path))
                 return c;
+            var keys = new HashSet<string>();
             foreach (string line in File.ReadAllLines(path))
             {
                 int i = line.IndexOf('=');
@@ -38,13 +44,19 @@ namespace RotaryMonitor
                     continue;
                 string k = line.Substring(0, i).Trim();
                 string v = line.Substring(i + 1).Trim();
+                keys.Add(k);
                 switch (k)
                 {
                     case "comPort": c.ComPort = v; break;
                     case "applyOnStartup": c.ApplyOnStartup = v == "true"; break;
                     case "wallpaperMode": c.WallpaperMode = v; break;
+                    case "enableWallpaper": c.EnableWallpaper = v == "true"; break;
+                    case "changeRestWallpaper": c.ChangeRestWallpaper = v == "true"; break;
+                    case "restFollowRotation": c.RestFollowRotation = v == "true"; break;
                     case "landscapeWallpaper": c.LandscapeWallpaper = v; break;
                     case "portraitWallpaper": c.PortraitWallpaper = v; break;
+                    case "restLandscapeWallpaper": c.RestLandscapeWallpaper = v; break;
+                    case "restPortraitWallpaper": c.RestPortraitWallpaper = v; break;
                     case "secondaryColor": c.SecondaryColor = v; break;
                     case "state1To":
                         int s1; if (int.TryParse(v, out s1)) c.State1To = s1;
@@ -65,6 +77,20 @@ namespace RotaryMonitor
                         break;
                 }
             }
+            // migrate the legacy wallpaperMode radio to the new toggles
+            if (!keys.Contains("changeRestWallpaper") && keys.Contains("wallpaperMode"))
+            {
+                if (c.WallpaperMode == "both")
+                {
+                    c.ChangeRestWallpaper = true;
+                    c.RestFollowRotation = true;
+                }
+                else
+                {
+                    c.ChangeRestWallpaper = false;
+                    c.RestFollowRotation = false;
+                }
+            }
             return c;
         }
 
@@ -74,9 +100,13 @@ namespace RotaryMonitor
             {
                 "comPort=" + ComPort,
                 "applyOnStartup=" + (ApplyOnStartup ? "true" : "false"),
-                "wallpaperMode=" + WallpaperMode,
+                "enableWallpaper=" + (EnableWallpaper ? "true" : "false"),
+                "changeRestWallpaper=" + (ChangeRestWallpaper ? "true" : "false"),
+                "restFollowRotation=" + (RestFollowRotation ? "true" : "false"),
                 "landscapeWallpaper=" + LandscapeWallpaper,
                 "portraitWallpaper=" + PortraitWallpaper,
+                "restLandscapeWallpaper=" + RestLandscapeWallpaper,
+                "restPortraitWallpaper=" + RestPortraitWallpaper,
                 "secondaryColor=" + SecondaryColor,
                 "state1To=" + State1To,
                 "state3To=" + State3To,

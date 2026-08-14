@@ -372,4 +372,31 @@
     <data name="CalMismatch" xml:space="preserve">
         <value>Mismatch — detected {0}°, expected {1}°. Check the direction and try again.</value>
     </data>
+    <data name="EnableWallpaper" xml:space="preserve">
+        <value>Change wallpaper when rotated</value>
+    </data>
+    <data name="RotMonHeader" xml:space="preserve">
+        <value>Rotation monitor</value>
+    </data>
+    <data name="ChangeRestWallpaper" xml:space="preserve">
+        <value>Change wallpaper on the other monitors</value>
+    </data>
+    <data name="FollowRotWallpaper" xml:space="preserve">
+        <value>Follow the rotation monitor's wallpaper (may crop)</value>
+    </data>
+    <data name="RestLandscapeLabel" xml:space="preserve">
+        <value>Other monitors — when the rotation monitor is landscape:</value>
+    </data>
+    <data name="RestPortraitLabel" xml:space="preserve">
+        <value>Other monitors — when the rotation monitor is portrait:</value>
+    </data>
+    <data name="MsgWallpaperDisabled" xml:space="preserve">
+        <value>Wallpaper change is disabled.</value>
+    </data>
+    <data name="AboutFirmware" xml:space="preserve">
+        <value>Firmware repository</value>
+    </data>
+    <data name="ViewLicenses" xml:space="preserve">
+        <value>Third-party licenses</value>
+    </data>
 </root>

@@ -181,35 +181,55 @@
                                             Background="{ThemeResource AccentFillColorDefaultBrush}" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="WallpaperHeaderText" FontSize="17" FontWeight="SemiBold"/>
                                 </StackPanel>
-                                <RadioButtons x:Name="ModeRadio" MaxColumns="2"/>
-                                <Grid ColumnSpacing="10" RowSpacing="10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <TextBlock x:Name="LandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="LandscapeBox" PlaceholderText="C:\Pictures\..."/>
-                                    <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseLandscape" MinWidth="48"/>
-                                    <TextBlock x:Name="PortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="PortraitBox" PlaceholderText="C:\Pictures\..."/>
-                                    <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowsePortrait" MinWidth="48"/>
-                                    <TextBlock x:Name="SecondaryLabelText" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="10">
-                                        <Button x:Name="ColorButton" Click="OnColorClick" Width="104" Height="30" Padding="0">
-                                            <Border x:Name="ColorSwatch" Background="#FF000000" CornerRadius="5" Width="96" Height="22"/>
-                                        </Button>
-                                        <TextBlock x:Name="ColorValue" VerticalAlignment="Center"
-                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <ToggleSwitch x:Name="EnableWallpaperToggle" Toggled="OnWallpaperToggle"
+                                              MinWidth="360" HorizontalAlignment="Left"/>
+
+                                <StackPanel x:Name="WallpaperOptions" Spacing="12">
+                                    <TextBlock x:Name="RotMonHeaderText" FontWeight="SemiBold"/>
+                                    <Grid ColumnSpacing="10" RowSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock x:Name="LandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LandscapeBox" PlaceholderText="C:\Pictures\..."/>
+                                        <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseLandscape" MinWidth="48"/>
+                                        <TextBlock x:Name="PortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PortraitBox" PlaceholderText="C:\Pictures\..."/>
+                                        <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowsePortrait" MinWidth="48"/>
+                                    </Grid>
+
+                                    <ToggleSwitch x:Name="ChangeRestToggle" Toggled="OnWallpaperToggle"
+                                                  MinWidth="360" HorizontalAlignment="Left"/>
+
+                                    <StackPanel x:Name="RestOptions" Spacing="12">
+                                        <ToggleSwitch x:Name="FollowRotToggle" Toggled="OnWallpaperToggle"
+                                                      MinWidth="360" HorizontalAlignment="Left"/>
+                                        <Grid x:Name="RestPickers" ColumnSpacing="10" RowSpacing="10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock x:Name="RestLandscapeLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="RestLandscapeBox" PlaceholderText="C:\Pictures\..."/>
+                                            <Button Grid.Row="0" Grid.Column="2" Content="..." Click="OnBrowseRestLandscape" MinWidth="48"/>
+                                            <TextBlock x:Name="RestPortraitLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="RestPortraitBox" PlaceholderText="C:\Pictures\..."/>
+                                            <Button Grid.Row="1" Grid.Column="2" Content="..." Click="OnBrowseRestPortrait" MinWidth="48"/>
+                                        </Grid>
                                     </StackPanel>
-                                </Grid>
-                                <TextBlock x:Name="WallpaperHintText" TextWrapping="Wrap"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -291,10 +311,17 @@
                                 </StackPanel>
                                 <TextBlock x:Name="AboutVersionText"/>
                                 <HyperlinkButton x:Name="AboutRepoLink" Click="OnRepoClick"/>
+                                <HyperlinkButton x:Name="AboutFirmwareLink" Click="OnFirmwareClick"/>
                                 <Button x:Name="CheckUpdatesButton" Click="OnCheckUpdatesClick">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE72C;" FontSize="14"/>
                                         <TextBlock x:Name="CheckUpdatesButtonText"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="LicensesButton" Click="OnLicensesClick">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE8D5;" FontSize="14"/>
+                                        <TextBlock x:Name="LicensesButtonText"/>
                                     </StackPanel>
                                 </Button>
                                 <TextBlock x:Name="UpdateResultText" TextWrapping="Wrap"

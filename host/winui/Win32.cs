@@ -235,5 +235,23 @@ namespace RotaryMonitor
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, path,
                 SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
         }
+
+        /// <summary>Path of the wallpaper currently set by the OS ("" if unknown).</summary>
+        public static string GetCurrentWallpaper()
+        {
+            try
+            {
+                using (var k = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop"))
+                {
+                    object? v = k?.GetValue("Wallpaper");
+                    string s = v as string;
+                    return string.IsNullOrEmpty(s) ? "" : s;
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
     }
 }

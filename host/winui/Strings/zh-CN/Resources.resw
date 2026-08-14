@@ -372,4 +372,31 @@
     <data name="CalMismatch" xml:space="preserve">
         <value>不匹配——检测到 {0}°，预期 {1}°。请检查方向后重试。</value>
     </data>
+    <data name="EnableWallpaper" xml:space="preserve">
+        <value>旋转时更换壁纸</value>
+    </data>
+    <data name="RotMonHeader" xml:space="preserve">
+        <value>旋转显示器</value>
+    </data>
+    <data name="ChangeRestWallpaper" xml:space="preserve">
+        <value>更换其他显示器的壁纸</value>
+    </data>
+    <data name="FollowRotWallpaper" xml:space="preserve">
+        <value>跟随旋转显示器的壁纸（可能会被裁剪）</value>
+    </data>
+    <data name="RestLandscapeLabel" xml:space="preserve">
+        <value>其他显示器 —— 当旋转显示器为横屏时：</value>
+    </data>
+    <data name="RestPortraitLabel" xml:space="preserve">
+        <value>其他显示器 —— 当旋转显示器为竖屏时：</value>
+    </data>
+    <data name="MsgWallpaperDisabled" xml:space="preserve">
+        <value>壁纸更换已禁用。</value>
+    </data>
+    <data name="AboutFirmware" xml:space="preserve">
+        <value>固件仓库</value>
+    </data>
+    <data name="ViewLicenses" xml:space="preserve">
+        <value>第三方许可证</value>
+    </data>
 </root>

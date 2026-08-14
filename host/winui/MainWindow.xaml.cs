@@ -28,7 +28,6 @@ namespace RotaryMonitor
         private volatile bool _wantRun;
         private volatile int _lastApplied = -1;
         private bool _firstMessage = true;
-        private Windows.UI.Color _secondaryColor = UiColors.Black;
         private string _savedLanguage = "";
         private bool _startupInit;
         private SensorWindow? _sensorWindow;
@@ -99,10 +98,14 @@ namespace RotaryMonitor
             TestPortrait270Button.Content = L.Get("TestPortrait270Button.Content");
 
             WallpaperHeaderText.Text = L.Get("WallpaperHeader.Text");
+            EnableWallpaperToggle.Header = L.Get("EnableWallpaper");
+            RotMonHeaderText.Text = L.Get("RotMonHeader");
             LandscapeLabelText.Text = L.Get("LandscapeLabel.Text");
             PortraitLabelText.Text = L.Get("PortraitLabel.Text");
-            SecondaryLabelText.Text = L.Get("SecondaryLabel.Text");
-            WallpaperHintText.Text = L.Get("WallpaperHint");
+            ChangeRestToggle.Header = L.Get("ChangeRestWallpaper");
+            FollowRotToggle.Header = L.Get("FollowRotWallpaper");
+            RestLandscapeLabelText.Text = L.Get("RestLandscapeLabel");
+            RestPortraitLabelText.Text = L.Get("RestPortraitLabel");
 
             OptionsHeaderText.Text = L.Get("OptionsHeader");
             ApplyOnStartupCheck.Content = L.Get("ApplyOnStartupCheck.Content");
@@ -118,13 +121,9 @@ namespace RotaryMonitor
             AboutHeaderText.Text = L.Get("NavAbout");
             AboutVersionText.Text = string.Format(L.Get("AboutVersion"), AppVersion);
             AboutRepoLink.Content = L.Get("AboutRepo");
+            AboutFirmwareLink.Content = L.Get("AboutFirmware");
             CheckUpdatesButtonText.Text = L.Get("CheckUpdates");
-
-            if (ModeRadio.Items.Count == 0)
-            {
-                ModeRadio.Items.Add(L.Get("ModeBothRadio.Content"));
-                ModeRadio.Items.Add(L.Get("ModeMainRadio.Content"));
-            }
+            LicensesButtonText.Text = L.Get("ViewLicenses");
 
             LanguageCombo.Items.Clear();
             LanguageCombo.Items.Add(L.Get("LangSystem"));
@@ -138,10 +137,14 @@ namespace RotaryMonitor
             LocalizeUi();
 
             ApplyOnStartupCheck.IsChecked = _cfg.ApplyOnStartup;
-            ModeRadio.SelectedIndex = _cfg.WallpaperMode == "main" ? 1 : 0;
+            EnableWallpaperToggle.IsOn = _cfg.EnableWallpaper;
+            ChangeRestToggle.IsOn = _cfg.ChangeRestWallpaper;
+            FollowRotToggle.IsOn = _cfg.RestFollowRotation;
             LandscapeBox.Text = _cfg.LandscapeWallpaper;
             PortraitBox.Text = _cfg.PortraitWallpaper;
-            SetColorDisplay(_cfg.SecondaryColor);
+            RestLandscapeBox.Text = _cfg.RestLandscapeWallpaper;
+            RestPortraitBox.Text = _cfg.RestPortraitWallpaper;
+            UpdateWallpaperVisibility();
 
             UpdateCalStatus();
 
@@ -176,10 +179,13 @@ namespace RotaryMonitor
         {
             _cfg.ComPort = SelectedPort();
             _cfg.ApplyOnStartup = ApplyOnStartupCheck.IsChecked == true;
-            _cfg.WallpaperMode = ModeRadio.SelectedIndex == 1 ? "main" : "both";
+            _cfg.EnableWallpaper = EnableWallpaperToggle.IsOn;
+            _cfg.ChangeRestWallpaper = ChangeRestToggle.IsOn;
+            _cfg.RestFollowRotation = FollowRotToggle.IsOn;
             _cfg.LandscapeWallpaper = LandscapeBox.Text.Trim();
             _cfg.PortraitWallpaper = PortraitBox.Text.Trim();
-            _cfg.SecondaryColor = ToHex(_secondaryColor);
+            _cfg.RestLandscapeWallpaper = RestLandscapeBox.Text.Trim();
+            _cfg.RestPortraitWallpaper = RestPortraitBox.Text.Trim();
             _cfg.Language = LangFromIndex(LanguageCombo.SelectedIndex);
             _cfg.StartWithWindows = StartWithWindowsCheck.IsChecked == true;
             _cfg.AutoConnect = AutoConnectCheck.IsChecked == true;
@@ -434,6 +440,8 @@ namespace RotaryMonitor
 
         private void OnBrowseLandscape(object sender, RoutedEventArgs e) => BrowseImage(LandscapeBox);
         private void OnBrowsePortrait(object sender, RoutedEventArgs e) => BrowseImage(PortraitBox);
+        private void OnBrowseRestLandscape(object sender, RoutedEventArgs e) => BrowseImage(RestLandscapeBox);
+        private void OnBrowseRestPortrait(object sender, RoutedEventArgs e) => BrowseImage(RestPortraitBox);
 
         private async void BrowseImage(TextBox target)
         {
@@ -453,51 +461,24 @@ namespace RotaryMonitor
                 target.Text = file.Path;
         }
 
-        private void OnColorClick(object sender, RoutedEventArgs e)
+        private void OnWallpaperToggle(object sender, RoutedEventArgs e)
         {
-            var cp = new ColorPicker { Color = _secondaryColor };
-            var flyout = new Flyout { Content = cp };
-            flyout.Closed += (s, a) => SetColorDisplay(ToHex(cp.Color));
-            ColorButton.Flyout = flyout;
-            flyout.ShowAt(ColorButton);
+            UpdateWallpaperVisibility();
+        }
+
+        private void UpdateWallpaperVisibility()
+        {
+            WallpaperOptions.Visibility = EnableWallpaperToggle.IsOn
+                ? Visibility.Visible : Visibility.Collapsed;
+            RestOptions.Visibility = (EnableWallpaperToggle.IsOn && ChangeRestToggle.IsOn)
+                ? Visibility.Visible : Visibility.Collapsed;
+            RestPickers.Visibility = (EnableWallpaperToggle.IsOn && ChangeRestToggle.IsOn && !FollowRotToggle.IsOn)
+                ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
         {
             // applied on Save; the UI is already loaded
-        }
-
-        private void SetColorDisplay(string hex)
-        {
-            var c = ParseHex(hex);
-            _secondaryColor = c;
-            if (ColorSwatch != null)
-                ColorSwatch.Background = new SolidColorBrush(c);
-            if (ColorValue != null)
-                ColorValue.Text = hex.ToUpperInvariant();
-        }
-
-        private static string ToHex(Windows.UI.Color c)
-        {
-            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-        }
-
-        private static Windows.UI.Color ParseHex(string hex)
-        {
-            try
-            {
-                if (hex.StartsWith("#"))
-                    hex = hex.Substring(1);
-                if (hex.Length == 6)
-                    hex = "FF" + hex;
-                uint v = Convert.ToUInt32(hex, 16);
-                return Windows.UI.Color.FromArgb((byte)(v >> 24), (byte)(v >> 16),
-                    (byte)(v >> 8), (byte)v);
-            }
-            catch
-            {
-                return UiColors.Black;
-            }
         }
 
         // ---------------- Monitoring ----------------
@@ -903,21 +884,26 @@ namespace RotaryMonitor
 
         private void ApplyWallpaper(int dmdo)
         {
-            string landscape = _cfg.LandscapeWallpaper;
-            string portrait = _cfg.PortraitWallpaper;
-            if (string.IsNullOrEmpty(landscape) && string.IsNullOrEmpty(portrait))
+            if (!_cfg.EnableWallpaper)
+            {
+                Log(L.Get("MsgWallpaperDisabled"));
+                return;
+            }
+            string rotLand = _cfg.LandscapeWallpaper;
+            string rotPort = _cfg.PortraitWallpaper;
+            if (string.IsNullOrEmpty(rotLand) && string.IsNullOrEmpty(rotPort))
             {
                 Log(L.Get("MsgWallpaperNotFound"));
                 return;
             }
             List<Win32.MonitorInfo> monitors = Win32.EnumMonitors();
-            System.Drawing.Color secondary = System.Drawing.Color.FromArgb(
-                _secondaryColor.A, _secondaryColor.R, _secondaryColor.G, _secondaryColor.B);
-            bool showOnAll = _cfg.WallpaperMode == "both";
-            string target = ResolveRotateTarget();
-            string tmp = Wallpaper.Compose(landscape, portrait, monitors, secondary, showOnAll, target);
+            string current = Win32.GetCurrentWallpaper();
+            string tmp = Wallpaper.Compose(rotLand, rotPort,
+                _cfg.RestLandscapeWallpaper, _cfg.RestPortraitWallpaper, current,
+                monitors, ResolveRotateTarget(),
+                _cfg.ChangeRestWallpaper, _cfg.RestFollowRotation);
             Win32.SetWallpaper(tmp, "fill");
-            Log(string.Format(showOnAll ? L.Get("MsgWallpaperBoth") : L.Get("MsgWallpaperMain"), target));
+            Log(string.Format(L.Get("MsgWallpaperBoth"), ResolveRotateTarget()));
         }
 
         // ---------------- UI marshalling ----------------
@@ -1040,6 +1026,21 @@ namespace RotaryMonitor
         private void OnRepoClick(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo(RepoUrl) { UseShellExecute = true });
+        }
+
+        private const string FirmwareUrl = "https://github.com/nonefffds/rotary-firmware";
+
+        private void OnFirmwareClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(FirmwareUrl) { UseShellExecute = true });
+        }
+
+        private void OnLicensesClick(object sender, RoutedEventArgs e)
+        {
+            string path = Path.Combine(AppContext.BaseDirectory, "THIRD-PARTY-NOTICES.txt");
+            if (!File.Exists(path))
+                return;
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
         }
 
         private async void OnCheckUpdatesClick(object sender, RoutedEventArgs e)

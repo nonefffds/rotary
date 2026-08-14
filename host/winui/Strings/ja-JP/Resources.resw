@@ -372,4 +372,31 @@
     <data name="CalMismatch" xml:space="preserve">
         <value>不一致 — 検出 {0}°、予想 {1}°。方向を確認してやり直してください。</value>
     </data>
+    <data name="EnableWallpaper" xml:space="preserve">
+        <value>回転時に壁紙を変更</value>
+    </data>
+    <data name="RotMonHeader" xml:space="preserve">
+        <value>回転モニター</value>
+    </data>
+    <data name="ChangeRestWallpaper" xml:space="preserve">
+        <value>他のモニターの壁紙を変更</value>
+    </data>
+    <data name="FollowRotWallpaper" xml:space="preserve">
+        <value>回転モニターの壁紙に合わせる（切り取りの可能性あり）</value>
+    </data>
+    <data name="RestLandscapeLabel" xml:space="preserve">
+        <value>他のモニター — 回転モニターが横向きの時：</value>
+    </data>
+    <data name="RestPortraitLabel" xml:space="preserve">
+        <value>他のモニター — 回転モニターが縦向きの時：</value>
+    </data>
+    <data name="MsgWallpaperDisabled" xml:space="preserve">
+        <value>壁紙の変更は無効です。</value>
+    </data>
+    <data name="AboutFirmware" xml:space="preserve">
+        <value>ファームウェアリポジトリ</value>
+    </data>
+    <data name="ViewLicenses" xml:space="preserve">
+        <value>サードパーティーライセンス</value>
+    </data>
 </root>

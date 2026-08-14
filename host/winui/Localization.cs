@@ -138,6 +138,15 @@ namespace RotaryMonitor
                 { "CalSaveRot", "Save rotation" },
                 { "CalVerify", "Detected rotation: {0}° (expected {1}°)" },
                 { "CalMismatch", "Mismatch — detected {0}°, expected {1}°. Check the direction and try again." },
+                { "EnableWallpaper", "Change wallpaper when rotated" },
+                { "RotMonHeader", "Rotation monitor" },
+                { "ChangeRestWallpaper", "Change wallpaper on the other monitors" },
+                { "FollowRotWallpaper", "Follow the rotation monitor's wallpaper (may crop)" },
+                { "RestLandscapeLabel", "Other monitors — when the rotation monitor is landscape:" },
+                { "RestPortraitLabel", "Other monitors — when the rotation monitor is portrait:" },
+                { "MsgWallpaperDisabled", "Wallpaper change is disabled." },
+                { "AboutFirmware", "Firmware repository" },
+                { "ViewLicenses", "Third-party licenses" },
                 } },
                 { "zh-CN", new Dictionary<string, string>
                 {
@@ -265,6 +274,15 @@ namespace RotaryMonitor
                 { "CalSaveRot", "保存旋转" },
                 { "CalVerify", "检测到旋转：{0}°（预期 {1}°）" },
                 { "CalMismatch", "不匹配——检测到 {0}°，预期 {1}°。请检查方向后重试。" },
+                { "EnableWallpaper", "旋转时更换壁纸" },
+                { "RotMonHeader", "旋转显示器" },
+                { "ChangeRestWallpaper", "更换其他显示器的壁纸" },
+                { "FollowRotWallpaper", "跟随旋转显示器的壁纸（可能会被裁剪）" },
+                { "RestLandscapeLabel", "其他显示器 —— 当旋转显示器为横屏时：" },
+                { "RestPortraitLabel", "其他显示器 —— 当旋转显示器为竖屏时：" },
+                { "MsgWallpaperDisabled", "壁纸更换已禁用。" },
+                { "AboutFirmware", "固件仓库" },
+                { "ViewLicenses", "第三方许可证" },
                 } },
                 { "ja-JP", new Dictionary<string, string>
                 {
@@ -392,6 +410,15 @@ namespace RotaryMonitor
                 { "CalSaveRot", "回転を保存" },
                 { "CalVerify", "検出した回転：{0}°（予想 {1}°）" },
                 { "CalMismatch", "不一致 — 検出 {0}°、予想 {1}°。方向を確認してやり直してください。" },
+                { "EnableWallpaper", "回転時に壁紙を変更" },
+                { "RotMonHeader", "回転モニター" },
+                { "ChangeRestWallpaper", "他のモニターの壁紙を変更" },
+                { "FollowRotWallpaper", "回転モニターの壁紙に合わせる（切り取りの可能性あり）" },
+                { "RestLandscapeLabel", "他のモニター — 回転モニターが横向きの時：" },
+                { "RestPortraitLabel", "他のモニター — 回転モニターが縦向きの時：" },
+                { "MsgWallpaperDisabled", "壁紙の変更は無効です。" },
+                { "AboutFirmware", "ファームウェアリポジトリ" },
+                { "ViewLicenses", "サードパーティーライセンス" },
                 } },
             };
 
