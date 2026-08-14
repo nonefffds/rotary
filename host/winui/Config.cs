@@ -28,12 +28,25 @@ namespace RotaryMonitor
 
         public static string DefaultPath
         {
+            get
+            {
+                string dir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Rotary");
+                return Path.Combine(dir, "rotary.config");
+            }
+        }
+
+        /// <summary>Old location (next to the exe); used to migrate existing profiles.</summary>
+        public static string LegacyPath
+        {
             get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "rotary.config"); }
         }
 
         public static AppConfig Load(string path)
         {
             var c = new AppConfig();
+            if (!File.Exists(path) && File.Exists(LegacyPath))
+                path = LegacyPath;   // migrate an old profile stored next to the exe
             if (!File.Exists(path))
                 return c;
             var keys = new HashSet<string>();
@@ -98,8 +111,7 @@ namespace RotaryMonitor
         {
             var lines = new List<string>
             {
-                "comPort=" + ComPort,
-                "applyOnStartup=" + (ApplyOnStartup ? "true" : "false"),
+                "comPort=" + ComPort,                "applyOnStartup=" + (ApplyOnStartup ? "true" : "false"),
                 "enableWallpaper=" + (EnableWallpaper ? "true" : "false"),
                 "changeRestWallpaper=" + (ChangeRestWallpaper ? "true" : "false"),
                 "restFollowRotation=" + (RestFollowRotation ? "true" : "false"),
@@ -118,6 +130,9 @@ namespace RotaryMonitor
                 "mountOffset=" + MountOffset.ToString("0.##",
                     System.Globalization.CultureInfo.InvariantCulture),
             };
+            string dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
             File.WriteAllLines(path, lines);
         }
     }

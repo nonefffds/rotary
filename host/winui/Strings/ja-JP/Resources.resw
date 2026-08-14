@@ -402,4 +402,10 @@
     <data name="SaveWallpaper" xml:space="preserve">
         <value>壁紙を保存</value>
     </data>
+    <data name="MsgSaved" xml:space="preserve">
+        <value>保存しました</value>
+    </data>
+    <data name="CalNotConnected" xml:space="preserve">
+        <value>未接続 — 先にCOMポートへ接続してください。</value>
+    </data>
 </root>

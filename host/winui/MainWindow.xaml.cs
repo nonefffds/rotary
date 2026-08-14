@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Windowing;
 using Windows.Globalization;
@@ -411,7 +412,7 @@ namespace RotaryMonitor
             string old = _savedLanguage;
             SaveConfig();
             _savedLanguage = _cfg.Language;
-            SetStatusInfo(L.Get("MsgSettingsSaved"), InfoBarSeverity.Success);
+            ShowSavedPrompt(SaveButton);
 
             if (_cfg.Language != old)
             {
@@ -477,7 +478,17 @@ namespace RotaryMonitor
         private void OnSaveWallpaperClick(object sender, RoutedEventArgs e)
         {
             SaveFromUi();
-            SetStatusInfo(L.Get("MsgSettingsSaved"), InfoBarSeverity.Success);
+            ShowSavedPrompt(SaveWallpaperButton);
+        }
+
+        private void ShowSavedPrompt(FrameworkElement anchor)
+        {
+            var fly = new Flyout
+            {
+                Content = new TextBlock { Text = L.Get("MsgSaved") },
+                Placement = FlyoutPlacementMode.Bottom,
+            };
+            fly.ShowAt(anchor);
         }
 
         private void SaveFromUi()
@@ -770,8 +781,6 @@ namespace RotaryMonitor
             ReadConfigFromUi();
             if (!IsConnected)
                 Connect();
-            if (!IsConnected)
-                return;
             await RunCalibrationAsync();
         }
 
@@ -780,7 +789,14 @@ namespace RotaryMonitor
             var panel = new StackPanel { Spacing = 12, MinWidth = 440, MaxWidth = 560 };
 
             var stepText = new TextBlock { Text = L.Get("CalStep1"), TextWrapping = TextWrapping.Wrap };
-            var radio = new RadioButtons();
+            var conn = new TextBlock
+            {
+                Text = IsConnected ? string.Format(L.Get("StatusConnected"), _cfg.ComPort)
+                    : L.Get("CalNotConnected"),
+                Foreground = new SolidColorBrush(IsConnected ? UiColors.ForestGreen : UiColors.DarkRed),
+                FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+            };
+            var radio = new RadioButtons { Visibility = Visibility.Collapsed };
             radio.Items.Add(L.Get("CalDirCW"));    // 0 -> 90
             radio.Items.Add(L.Get("CalDirCCW"));   // 1 -> 270
             radio.SelectedIndex = 0;
@@ -800,6 +816,7 @@ namespace RotaryMonitor
                 Content = L.Get("CalBaseline"),
                 MinWidth = 200,
                 HorizontalAlignment = HorizontalAlignment.Center,
+                IsEnabled = IsConnected,
             };
             var result = new TextBlock
             {
@@ -807,6 +824,7 @@ namespace RotaryMonitor
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
             };
 
+            panel.Children.Add(conn);
             panel.Children.Add(stepText);
             panel.Children.Add(radio);
             panel.Children.Add(liveLabel);
@@ -824,7 +842,7 @@ namespace RotaryMonitor
                 XamlRoot = Content.XamlRoot,
             };
 
-            // live angle readout, fed by the shared connection's latest reading
+            // live angle readout + connection status, fed by the shared connection
             var timer = DispatcherQueue.CreateTimer();
             timer.Interval = TimeSpan.FromMilliseconds(200);
             timer.Tick += (s, e) =>
@@ -832,6 +850,11 @@ namespace RotaryMonitor
                 if (!double.IsNaN(_latestAngle))
                     live.Text = _latestAngle.ToString("0.0",
                         System.Globalization.CultureInfo.InvariantCulture) + "\u00B0";
+                bool connected = IsConnected;
+                conn.Text = connected ? string.Format(L.Get("StatusConnected"), _cfg.ComPort)
+                    : L.Get("CalNotConnected");
+                conn.Foreground = new SolidColorBrush(connected ? UiColors.ForestGreen : UiColors.DarkRed);
+                save.IsEnabled = connected && save.IsEnabled;
             };
             timer.Start();
 
@@ -839,7 +862,7 @@ namespace RotaryMonitor
             save.Click += delegate
             {
                 double a = _latestAngle;
-                if (double.IsNaN(a))
+                if (double.IsNaN(a) || !IsConnected)
                 {
                     result.Text = L.Get("CalNoData");
                     return;
@@ -849,6 +872,7 @@ namespace RotaryMonitor
                     // Step 1: baseline captured (monitor horizontal)
                     baseline = a;
                     stepText.Text = L.Get("CalStep2");
+                    radio.Visibility = Visibility.Visible;   // choose direction now
                     save.Content = L.Get("CalSaveRot");
                     result.Text = string.Format(L.Get("CalBaselineDone"),
                         a.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture));

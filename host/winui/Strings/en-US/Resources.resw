@@ -402,4 +402,10 @@
     <data name="SaveWallpaper" xml:space="preserve">
         <value>Save wallpaper</value>
     </data>
+    <data name="MsgSaved" xml:space="preserve">
+        <value>Saved</value>
+    </data>
+    <data name="CalNotConnected" xml:space="preserve">
+        <value>Not connected — connect to a COM port first.</value>
+    </data>
 </root>

@@ -148,6 +148,8 @@ namespace RotaryMonitor
                 { "AboutFirmware", "Firmware repository" },
                 { "ViewLicenses", "Third-party licenses" },
                 { "SaveWallpaper", "Save wallpaper" },
+                { "MsgSaved", "Saved" },
+                { "CalNotConnected", "Not connected — connect to a COM port first." },
                 } },
                 { "zh-CN", new Dictionary<string, string>
                 {
@@ -285,6 +287,8 @@ namespace RotaryMonitor
                 { "AboutFirmware", "固件仓库" },
                 { "ViewLicenses", "第三方许可证" },
                 { "SaveWallpaper", "保存壁纸" },
+                { "MsgSaved", "已保存" },
+                { "CalNotConnected", "未连接——请先连接串口。" },
                 } },
                 { "ja-JP", new Dictionary<string, string>
                 {
@@ -422,6 +426,8 @@ namespace RotaryMonitor
                 { "AboutFirmware", "ファームウェアリポジトリ" },
                 { "ViewLicenses", "サードパーティーライセンス" },
                 { "SaveWallpaper", "壁紙を保存" },
+                { "MsgSaved", "保存しました" },
+                { "CalNotConnected", "未接続 — 先にCOMポートへ接続してください。" },
                 } },
             };
 

@@ -402,4 +402,10 @@
     <data name="SaveWallpaper" xml:space="preserve">
         <value>保存壁纸</value>
     </data>
+    <data name="MsgSaved" xml:space="preserve">
+        <value>已保存</value>
+    </data>
+    <data name="CalNotConnected" xml:space="preserve">
+        <value>未连接——请先连接串口。</value>
+    </data>
 </root>
