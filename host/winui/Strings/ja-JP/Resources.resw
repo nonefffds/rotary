@@ -339,4 +339,37 @@
     <data name="TrayHint" xml:space="preserve">
         <value>Rotary はトレイで実行中です。</value>
     </data>
+    <data name="ExitButton" xml:space="preserve">
+        <value>終了</value>
+    </data>
+    <data name="CalStep1" xml:space="preserve">
+        <value>手順 1/3 — モニターを横向きに保ち、「基準を保存」を押してください。</value>
+    </data>
+    <data name="CalBaseline" xml:space="preserve">
+        <value>基準を保存</value>
+    </data>
+    <data name="CalBaselineDone" xml:space="preserve">
+        <value>基準を取得しました：{0}°</value>
+    </data>
+    <data name="CalStep2" xml:space="preserve">
+        <value>手順 2/3 — 回転方向を選び、モニターをその位置まで回転してください。</value>
+    </data>
+    <data name="CalDirCW" xml:space="preserve">
+        <value>90° — 時計回り（右端が下）</value>
+    </data>
+    <data name="CalDirCCW" xml:space="preserve">
+        <value>270° — 反時計回り（左端が下）</value>
+    </data>
+    <data name="CalStep3" xml:space="preserve">
+        <value>手順 3/3 — 「回転を保存」を押してください。</value>
+    </data>
+    <data name="CalSaveRot" xml:space="preserve">
+        <value>回転を保存</value>
+    </data>
+    <data name="CalVerify" xml:space="preserve">
+        <value>検出した回転：{0}°（予想 {1}°）</value>
+    </data>
+    <data name="CalMismatch" xml:space="preserve">
+        <value>不一致 — 検出 {0}°、予想 {1}°。方向を確認してやり直してください。</value>
+    </data>
 </root>

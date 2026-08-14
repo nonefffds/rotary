@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Content Include="Assets\rotary.ico" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\rotary.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

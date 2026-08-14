@@ -107,6 +107,13 @@ namespace RotaryMonitor
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern bool Shell_NotifyIcon(int dwMessage, ref NOTIFYICONDATA nid);
 
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        public static extern uint ExtractIconExW(string lpszFile, int nIconIndex,
+            out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons);
+
+        [DllImport("user32.dll")]
+        public static extern bool DestroyIcon(IntPtr hIcon);
+
         [DllImport("user32.dll")]
         public static extern IntPtr CreatePopupMenu();
 

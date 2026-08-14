@@ -339,4 +339,37 @@
     <data name="TrayHint" xml:space="preserve">
         <value>Rotary is still running in the tray.</value>
     </data>
+    <data name="ExitButton" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="CalStep1" xml:space="preserve">
+        <value>Step 1 of 3 — Keep the monitor horizontal (landscape), then press Save baseline.</value>
+    </data>
+    <data name="CalBaseline" xml:space="preserve">
+        <value>Save baseline</value>
+    </data>
+    <data name="CalBaselineDone" xml:space="preserve">
+        <value>Baseline captured: {0}°</value>
+    </data>
+    <data name="CalStep2" xml:space="preserve">
+        <value>Step 2 of 3 — Choose the rotation direction, then rotate the monitor to that position.</value>
+    </data>
+    <data name="CalDirCW" xml:space="preserve">
+        <value>90° — clockwise (right edge down)</value>
+    </data>
+    <data name="CalDirCCW" xml:space="preserve">
+        <value>270° — counterclockwise (left edge down)</value>
+    </data>
+    <data name="CalStep3" xml:space="preserve">
+        <value>Step 3 of 3 — Press Save rotation.</value>
+    </data>
+    <data name="CalSaveRot" xml:space="preserve">
+        <value>Save rotation</value>
+    </data>
+    <data name="CalVerify" xml:space="preserve">
+        <value>Detected rotation: {0}° (expected {1}°)</value>
+    </data>
+    <data name="CalMismatch" xml:space="preserve">
+        <value>Mismatch — detected {0}°, expected {1}°. Check the direction and try again.</value>
+    </data>
 </root>

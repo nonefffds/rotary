@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO.Ports;
-using System.Threading;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -11,28 +9,62 @@ using Windows.UI;
 
 namespace RotaryMonitor
 {
+    /// <summary>Read-only view of the accessory: shows the live angle report.
+    /// It shares the main connection (fed by MainWindow's serial reader), so it
+    /// never opens its own port or disconnects the app.</summary>
     public sealed partial class SensorWindow : Window
     {
-        private readonly string _port;
-        private volatile bool _closing;
-        private Thread? _thread;
-
         private bool _hasData;
-        private double _angle;
-        private float _ax, _ay, _az;
+        private string _port = "";
         private RotateTransform _needleRot;
 
-        public SensorWindow(string port)
+        public SensorWindow()
         {
-            _port = port;
             InitializeComponent();
             Title = L.Get("SensorTitle.Title");
             NoteText.Text = L.Get("SensorNote.Text");
             BuildDial();
-            StatusText.Text = string.Format(L.Get("SensorConnecting"), port);
-            Closed += (s, e) => { _closing = true; };
-            _thread = new Thread(Loop) { IsBackground = true };
-            _thread.Start();
+            StatusText.Text = L.Get("SensorConnecting");
+        }
+
+        public void SetPort(string port)
+        {
+            _port = port ?? "";
+            StatusText.Text = string.Format(L.Get("SensorConnected"), _port);
+        }
+
+        public void SetConnected(bool connected)
+        {
+            DispatcherQueue.TryEnqueue(delegate
+            {
+                StatusText.Text = connected
+                    ? string.Format(L.Get("SensorConnected"), _port)
+                    : L.Get("SensorClosed");
+                StatusText.Foreground = connected
+                    ? new SolidColorBrush(UiColors.ForestGreen)
+                    : new SolidColorBrush(UiColors.DarkRed);
+            });
+        }
+
+        public void OnReading(double angle, float ax, float ay, float az)
+        {
+            DispatcherQueue.TryEnqueue(delegate
+            {
+                _hasData = true;
+                AngleText.Text = angle.ToString("0.0", CultureInfo.InvariantCulture) + "\u00B0";
+                RawText.Text = "ax=" + ax.ToString("0.00", CultureInfo.InvariantCulture)
+                    + "   ay=" + ay.ToString("0.00", CultureInfo.InvariantCulture)
+                    + "   az=" + az.ToString("0.00", CultureInfo.InvariantCulture);
+
+                string st;
+                if (angle >= -30 && angle <= 30) st = L.Get("SensorLandscape");
+                else if (angle >= 60 && angle <= 120) st = L.Get("SensorPortrait90");
+                else if (angle >= 150 || angle <= -150) st = L.Get("SensorFlipped");
+                else if (angle >= -120 && angle <= -60) st = L.Get("SensorPortrait270");
+                else st = L.Get("SensorBetween");
+                StateText.Text = st;
+                _needleRot.Angle = angle;
+            });
         }
 
         private void BuildDial()
@@ -107,87 +139,6 @@ namespace RotaryMonitor
             Canvas.SetLeft(hub, cx - 4);
             Canvas.SetTop(hub, cy - 4);
             Dial.Children.Add(hub);
-        }
-
-        private void Loop()
-        {
-            while (!_closing)
-            {
-                try
-                {
-                    using (var sp = new SerialPort(_port, 115200))
-                    {
-                        sp.ReadTimeout = 2000;
-                        sp.Open();
-                        SetStatus(string.Format(L.Get("SensorConnected"), _port), true);
-                        while (!_closing)
-                        {
-                            string line;
-                            try { line = sp.ReadLine(); }
-                            catch (TimeoutException) { continue; }
-                            if (line == null) continue;
-                            Parse(line.Trim());
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    SetStatus(string.Format(L.Get("SensorError"), ex.Message), false);
-                }
-                for (int i = 0; i < 10 && !_closing; i++)
-                    Thread.Sleep(500);
-            }
-            SetStatus(L.Get("SensorClosed"), false);
-        }
-
-        private void Parse(string line)
-        {
-            if (!line.StartsWith("A="))
-                return;
-            string[] p = line.Substring(2).Split(' ');
-            double a; float x, y, z;
-            if (p.Length >= 4 && double.TryParse(p[0], NumberStyles.Float,
-                    CultureInfo.InvariantCulture, out a)
-                && float.TryParse(p[1], NumberStyles.Float, CultureInfo.InvariantCulture, out x)
-                && float.TryParse(p[2], NumberStyles.Float, CultureInfo.InvariantCulture, out y)
-                && float.TryParse(p[3], NumberStyles.Float, CultureInfo.InvariantCulture, out z))
-            {
-                _angle = a; _ax = x; _ay = y; _az = z; _hasData = true;
-                UpdateDisplay();
-            }
-        }
-
-        private void UpdateDisplay()
-        {
-            DispatcherQueue.TryEnqueue(delegate
-            {
-                if (!_hasData)
-                    return;
-                AngleText.Text = _angle.ToString("0.0", CultureInfo.InvariantCulture) + "\u00B0";
-                RawText.Text = "ax=" + _ax.ToString("0.00", CultureInfo.InvariantCulture)
-                    + "   ay=" + _ay.ToString("0.00", CultureInfo.InvariantCulture)
-                    + "   az=" + _az.ToString("0.00", CultureInfo.InvariantCulture);
-
-                string st;
-                if (_angle >= -30 && _angle <= 30) st = L.Get("SensorLandscape");
-                else if (_angle >= 60 && _angle <= 120) st = L.Get("SensorPortrait90");
-                else if (_angle >= 150 || _angle <= -150) st = L.Get("SensorFlipped");
-                else if (_angle >= -120 && _angle <= -60) st = L.Get("SensorPortrait270");
-                else st = L.Get("SensorBetween");
-                StateText.Text = st;
-                _needleRot.Angle = _angle;
-            });
-        }
-
-        private void SetStatus(string text, bool connected)
-        {
-            DispatcherQueue.TryEnqueue(delegate
-            {
-                StatusText.Text = text;
-                StatusText.Foreground = connected
-                    ? new SolidColorBrush(UiColors.ForestGreen)
-                    : new SolidColorBrush(UiColors.DarkRed);
-            });
         }
     }
 }

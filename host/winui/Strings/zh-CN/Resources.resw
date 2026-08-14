@@ -139,7 +139,7 @@
         <value>请先关闭传感器视图再开始监控。</value>
     </data>
     <data name="NavMonitor" xml:space="preserve">
-        <value>监控</value>
+        <value>显示器设置</value>
     </data>
     <data name="NavWallpaper" xml:space="preserve">
         <value>壁纸</value>
@@ -338,5 +338,38 @@
     </data>
     <data name="TrayHint" xml:space="preserve">
         <value>Rotary 仍在托盘运行中。</value>
+    </data>
+    <data name="ExitButton" xml:space="preserve">
+        <value>退出</value>
+    </data>
+    <data name="CalStep1" xml:space="preserve">
+        <value>第 1 步（共 3 步）——保持显示器水平（横屏），然后点击“保存基准”。</value>
+    </data>
+    <data name="CalBaseline" xml:space="preserve">
+        <value>保存基准</value>
+    </data>
+    <data name="CalBaselineDone" xml:space="preserve">
+        <value>已捕获基准：{0}°</value>
+    </data>
+    <data name="CalStep2" xml:space="preserve">
+        <value>第 2 步（共 3 步）——选择旋转方向，然后将显示器旋转到该位置。</value>
+    </data>
+    <data name="CalDirCW" xml:space="preserve">
+        <value>90° —— 顺时针（右边缘朝下）</value>
+    </data>
+    <data name="CalDirCCW" xml:space="preserve">
+        <value>270° —— 逆时针（左边缘朝下）</value>
+    </data>
+    <data name="CalStep3" xml:space="preserve">
+        <value>第 3 步（共 3 步）——点击“保存旋转”。</value>
+    </data>
+    <data name="CalSaveRot" xml:space="preserve">
+        <value>保存旋转</value>
+    </data>
+    <data name="CalVerify" xml:space="preserve">
+        <value>检测到旋转：{0}°（预期 {1}°）</value>
+    </data>
+    <data name="CalMismatch" xml:space="preserve">
+        <value>不匹配——检测到 {0}°，预期 {1}°。请检查方向后重试。</value>
     </data>
 </root>

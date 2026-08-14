@@ -22,8 +22,10 @@ namespace RotaryMonitor
     {
         private readonly AppConfig _cfg;
         private SerialPort? _serial;
+        private Thread? _readerThread;
+        private bool _readerDone;
+        private double _latestAngle = double.NaN;
         private volatile bool _wantRun;
-        private Thread? _thread;
         private volatile int _lastApplied = -1;
         private bool _firstMessage = true;
         private Windows.UI.Color _secondaryColor = UiColors.Black;
@@ -47,7 +49,14 @@ namespace RotaryMonitor
             {
                 try { AppWindow.SetIcon(iconPath); } catch { }
             }
-            AppWindow.Resize(new SizeInt32(860, 900));
+            try
+            {
+                string logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "rotary.png");
+                if (File.Exists(logoPath))
+                    LogoImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri(logoPath));
+            }
+            catch { }
+            AppWindow.Resize(new SizeInt32(920, 920));
             LoadConfigIntoUi();
             try { SetupTray(); } catch { }
             AppWindow.Closing += OnAppWindowClosing;
@@ -63,6 +72,7 @@ namespace RotaryMonitor
         private void LocalizeUi()
         {
             TitleText.Text = L.Get("AppTitle.Title");
+            ExitButtonText.Text = L.Get("ExitButton");
 
             NavMonitor.Content = L.Get("NavMonitor");
             NavWallpaper.Content = L.Get("NavWallpaper");
@@ -539,12 +549,17 @@ namespace RotaryMonitor
                 sp.ReadTimeout = 2000;
                 sp.Open();
                 _serial = sp;
+                _readerDone = false;
+                _readerThread = new Thread(ReaderLoop) { IsBackground = true };
+                _readerThread.Start();
                 Log(string.Format(L.Get("MsgSerialOpen"), port));
                 SetStatusInfo(string.Format(L.Get("StatusConnected"), port), InfoBarSeverity.Success);
                 DispatcherQueue.TryEnqueue(delegate
                 {
                     ConnectButtonText.Text = L.Get("PortDisconnect");
                     StartButton.IsEnabled = true;
+                    _sensorWindow?.SetPort(port);
+                    _sensorWindow?.SetConnected(true);
                 });
             }
             catch (Exception ex)
@@ -557,12 +572,10 @@ namespace RotaryMonitor
 
         private void Disconnect()
         {
-            if (_wantRun)
-            {
-                _wantRun = false;
-                if (_thread != null)
-                    _thread.Join(2000);
-            }
+            _wantRun = false;
+            _readerDone = true;
+            if (_readerThread != null)
+                _readerThread.Join(2000);
             try { _serial?.Close(); } catch { }
             _serial = null;
             SetStatusInfo(L.Get("StatusDisconnected"), InfoBarSeverity.Informational);
@@ -571,6 +584,7 @@ namespace RotaryMonitor
                 ConnectButtonText.Text = L.Get("PortConnect");
                 SetStartButton(false);
                 StartButton.IsEnabled = false;
+                _sensorWindow?.SetConnected(false);
             });
         }
 
@@ -598,8 +612,6 @@ namespace RotaryMonitor
             _lastApplied = -1;
             _wantRun = true;
             SetStartButton(true);
-            _thread = new Thread(MonitoringLoop) { IsBackground = true };
-            _thread.Start();
         }
 
         /// <summary>Map a measured angle (with mounting offset applied) to a
@@ -621,16 +633,21 @@ namespace RotaryMonitor
             return a;
         }
 
-        private static bool TryParseAngle(string line, out double angle)
+        private static bool TryParseReading(string line, out double angle, out float ax, out float ay, out float az)
         {
-            angle = 0;
+            angle = 0; ax = 0; ay = 0; az = 0;
             int eq = line.IndexOf('=');
             if (eq < 0) return false;
-            string rest = line.Substring(eq + 1).Trim();
-            int sp = rest.IndexOf(' ');
-            string num = sp >= 0 ? rest.Substring(0, sp) : rest;
-            return double.TryParse(num, System.Globalization.NumberStyles.Float,
-                System.Globalization.CultureInfo.InvariantCulture, out angle);
+            string[] p = line.Substring(eq + 1).Trim().Split(' ');
+            if (p.Length < 4) return false;
+            return double.TryParse(p[0], System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out angle)
+                && float.TryParse(p[1], System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out ax)
+                && float.TryParse(p[2], System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out ay)
+                && float.TryParse(p[3], System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out az);
         }
 
         private void ProcessAngle(double angle)
@@ -663,12 +680,12 @@ namespace RotaryMonitor
                         System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        private void MonitoringLoop()
+        private void ReaderLoop()
         {
             bool unexpected = false;
             try
             {
-                while (_wantRun)
+                while (!_readerDone)
                 {
                     SerialPort sp = _serial;
                     if (sp == null || !sp.IsOpen)
@@ -683,64 +700,61 @@ namespace RotaryMonitor
                     if (line == null) continue;
                     line = line.Trim();
                     if (line.Length == 0) continue;
-                    LogRx(line);
                     if (line.StartsWith("A="))
                     {
                         double angle;
-                        if (TryParseAngle(line, out angle))
-                            ProcessAngle(angle);
+                        float ax, ay, az;
+                        if (TryParseReading(line, out angle, out ax, out ay, out az))
+                        {
+                            _latestAngle = angle;
+                            if (_wantRun)
+                                ProcessAngle(angle);
+                            _sensorWindow?.OnReading(angle, ax, ay, az);
+                        }
+                    }
+                    else
+                    {
+                        LogRx(line);
                     }
                 }
             }
             finally
             {
-                SetStatusInfo(unexpected ? L.Get("StatusDisconnected") : L.Get("StatusStopped"),
-                    unexpected ? InfoBarSeverity.Warning : InfoBarSeverity.Informational);
-                DispatcherQueue.TryEnqueue(delegate
+                if (unexpected && !_readerDone)
                 {
-                    SetStartButton(false);
-                    StartButton.IsEnabled = IsConnected;
-                });
+                    try { _serial?.Close(); } catch { }
+                    _serial = null;
+                    SetStatusInfo(L.Get("StatusDisconnected"), InfoBarSeverity.Warning);
+                    DispatcherQueue.TryEnqueue(delegate
+                    {
+                        ConnectButtonText.Text = L.Get("PortConnect");
+                        SetStartButton(false);
+                        StartButton.IsEnabled = false;
+                        _sensorWindow?.SetConnected(false);
+                    });
+                }
             }
         }
 
-        private async void OpenSensorView()
+        private void OpenSensorView()
         {
             if (_sensorWindow != null)
-                return;   // already open
-
-            Disconnect();   // free the port for the sensor view
-
-            ReadConfigFromUi();
-            string port = _cfg.ComPort;
-            if (string.IsNullOrEmpty(port))
             {
-                var ports = SerialPort.GetPortNames();
-                if (ports != null && ports.Length > 0)
-                    port = ports[0];
-            }
-            if (string.IsNullOrEmpty(port))
-            {
-                await ShowDialogAsync(L.Get("MsgPickPortTitle"), L.Get("MsgPickPortFirst"));
+                _sensorWindow.Activate();
                 return;
             }
-            Log(string.Format(L.Get("MsgOpenSensor"), port));
-            var sensor = new SensorWindow(port);
+            if (!IsConnected)
+                Connect();
+            if (!IsConnected)
+                return;
+
+            var sensor = new SensorWindow();
             _sensorWindow = sensor;
+            sensor.SetPort(_cfg.ComPort);
+            sensor.SetConnected(true);
             sensor.Closed += (s, e) => _sensorWindow = null;
             sensor.Activate();
-        }
-
-        private async Task ShowDialogAsync(string title, string message)
-        {
-            var dlg = new ContentDialog
-            {
-                Title = title,
-                Content = message,
-                CloseButtonText = L.Get("MsgCancel"),
-                XamlRoot = Content.XamlRoot,
-            };
-            await dlg.ShowAsync();
+            Log(string.Format(L.Get("MsgOpenSensor"), _cfg.ComPort));
         }
 
         // ---------------- Calibration ----------------
@@ -752,39 +766,23 @@ namespace RotaryMonitor
                 _sensorWindow.Close();
                 _sensorWindow = null;
             }
-            Disconnect();
             ReadConfigFromUi();
+            if (!IsConnected)
+                Connect();
+            if (!IsConnected)
+                return;
             await RunCalibrationAsync();
         }
 
         private async Task RunCalibrationAsync()
         {
-            string port = _cfg.ComPort;
-            if (string.IsNullOrEmpty(port))
-            {
-                var ports = SerialPort.GetPortNames();
-                if (ports != null && ports.Length > 0)
-                    port = ports[0];
-            }
-            if (string.IsNullOrEmpty(port))
-            {
-                await ShowDialogAsync(L.Get("MsgPickPortTitle"), L.Get("MsgPickPortFirst"));
-                return;
-            }
+            var panel = new StackPanel { Spacing = 12, MinWidth = 440, MaxWidth = 560 };
 
-            var panel = new StackPanel { Spacing = 12, MinWidth = 440, MaxWidth = 540 };
-
-            var intro = new TextBlock { Text = L.Get("CalIntro"), TextWrapping = TextWrapping.Wrap };
+            var stepText = new TextBlock { Text = L.Get("CalStep1"), TextWrapping = TextWrapping.Wrap };
             var radio = new RadioButtons();
-            radio.Items.Add(L.Get("Deg90"));
-            radio.Items.Add(L.Get("Deg270"));
+            radio.Items.Add(L.Get("CalDirCW"));    // 0 -> 90
+            radio.Items.Add(L.Get("CalDirCCW"));   // 1 -> 270
             radio.SelectedIndex = 0;
-            var choose = new TextBlock
-            {
-                Text = L.Get("CalChoose"),
-                TextWrapping = TextWrapping.Wrap,
-                Foreground = new SolidColorBrush(UiColors.Gray),
-            };
             var liveLabel = new TextBlock
             {
                 Text = L.Get("CalLive"),
@@ -796,9 +794,9 @@ namespace RotaryMonitor
                 FontWeight = Microsoft.UI.Text.FontWeights.Bold,
                 Text = "--\u00B0",
             };
-            var capture = new Button
+            var save = new Button
             {
-                Content = L.Get("CalCapture"),
+                Content = L.Get("CalBaseline"),
                 MinWidth = 200,
                 HorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -808,12 +806,11 @@ namespace RotaryMonitor
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
             };
 
-            panel.Children.Add(intro);
+            panel.Children.Add(stepText);
             panel.Children.Add(radio);
-            panel.Children.Add(choose);
             panel.Children.Add(liveLabel);
             panel.Children.Add(live);
-            panel.Children.Add(capture);
+            panel.Children.Add(save);
             panel.Children.Add(result);
 
             var dlg = new ContentDialog
@@ -826,68 +823,61 @@ namespace RotaryMonitor
                 XamlRoot = Content.XamlRoot,
             };
 
-            var sp = new SerialPort(port, 115200);
-            sp.ReadTimeout = 2000;
-            bool readerDone = false;
-            double latest = double.NaN;
-            Thread? reader = null;
-            try
+            // live angle readout, fed by the shared connection's latest reading
+            var timer = DispatcherQueue.CreateTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(200);
+            timer.Tick += (s, e) =>
             {
-                sp.Open();
-                reader = new Thread(delegate ()
-                {
-                    while (!readerDone)
-                    {
-                        string line;
-                        try { line = sp.ReadLine(); }
-                        catch (TimeoutException) { continue; }
-                        catch { break; }
-                        if (line == null) continue;
-                        line = line.Trim();
-                        if (line.StartsWith("A="))
-                        {
-                            double a;
-                            if (TryParseAngle(line, out a))
-                            {
-                                latest = a;
-                                DispatcherQueue.TryEnqueue(delegate
-                                {
-                                    live.Text = a.ToString("0.0",
-                                        System.Globalization.CultureInfo.InvariantCulture) + "\u00B0";
-                                });
-                            }
-                        }
-                    }
-                }) { IsBackground = true };
-                reader.Start();
+                if (!double.IsNaN(_latestAngle))
+                    live.Text = _latestAngle.ToString("0.0",
+                        System.Globalization.CultureInfo.InvariantCulture) + "\u00B0";
+            };
+            timer.Start();
 
-                capture.Click += delegate
+            double baseline = double.NaN;
+            save.Click += delegate
+            {
+                double a = _latestAngle;
+                if (double.IsNaN(a))
                 {
-                    double a = latest;
-                    if (double.IsNaN(a))
-                    {
-                        result.Text = L.Get("CalNoData");
-                        return;
-                    }
+                    result.Text = L.Get("CalNoData");
+                    return;
+                }
+                if (double.IsNaN(baseline))
+                {
+                    // Step 1: baseline captured (monitor horizontal)
+                    baseline = a;
+                    stepText.Text = L.Get("CalStep2");
+                    save.Content = L.Get("CalSaveRot");
+                    result.Text = string.Format(L.Get("CalBaselineDone"),
+                        a.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture));
+                }
+                else
+                {
+                    // Step 3: rotated angle captured -> offset = baseline
                     double chosen = radio.SelectedIndex == 0 ? 90 : 270;
-                    double offset = NormalizeAngle(a - chosen);
+                    double offset = NormalizeAngle(baseline);
+                    double delta = NormalizeAngle(a - baseline);
                     _cfg.MountOffset = offset;
                     _cfg.Save(AppConfig.DefaultPath);
                     UpdateCalStatus();
                     result.Text = string.Format(L.Get("CalDone"),
                         offset.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture));
+                    if (Math.Abs(delta - chosen) > 30)
+                        result.Text += "\n" + string.Format(L.Get("CalMismatch"),
+                            delta.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture),
+                            chosen.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    else
+                        result.Text += "\n" + string.Format(L.Get("CalVerify"),
+                            delta.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture),
+                            chosen.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    save.IsEnabled = false;
                     dlg.IsPrimaryButtonEnabled = true;
-                };
+                }
+            };
 
-                await dlg.ShowAsync();
-            }
-            finally
-            {
-                readerDone = true;
-                if (reader != null)
-                    reader.Join(1500);
-                try { sp.Close(); } catch { }
-            }
+            await dlg.ShowAsync();
+            timer.Stop();
         }
 
         private void ApplyAndLog(int dmdo)
@@ -932,17 +922,27 @@ namespace RotaryMonitor
 
         // ---------------- UI marshalling ----------------
 
+        private const int MaxLogLines = 500;
+        private readonly List<string> _logLines = new List<string>();
+
         private void Log(string msg)
         {
             DispatcherQueue.TryEnqueue(delegate
             {
-                LogText.Text += DateTime.Now.ToString("HH:mm:ss") + "  " + msg + "\n";
+                _logLines.Add(DateTime.Now.ToString("HH:mm:ss") + "  " + msg);
+                if (_logLines.Count > MaxLogLines)
+                    _logLines.RemoveAt(0);
+                LogText.Text = string.Join("\n", _logLines);
                 LogTextScroll.ChangeView(null, double.MaxValue, null, false);
             });
         }
 
         private void LogRx(string line)
         {
+            // A= lines stream ~6x/s; logging each one floods the UI and makes it
+            // unresponsive, so only state changes and other messages are logged.
+            if (line.StartsWith("A="))
+                return;
             Log("[rx] " + line);
         }
 
@@ -962,14 +962,24 @@ namespace RotaryMonitor
         {
             try
             {
-                string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "rotary.ico");
                 IntPtr hIcon = IntPtr.Zero;
-                if (File.Exists(iconPath))
-                    hIcon = NativeMethods.LoadImageW(IntPtr.Zero, iconPath, NativeMethods.IMAGE_ICON,
-                        16, 16, NativeMethods.LR_LOADFROMFILE);
+                // Reliable: extract from the exe's embedded icon (the .ico is
+                // PNG-compressed, which LoadImageW can render blank/transparent).
+                NativeMethods.ExtractIconExW(Environment.ProcessPath ?? "RotaryMonitor.exe",
+                    0, out _, out hIcon, 1);
+                if (hIcon == IntPtr.Zero)
+                {
+                    string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "rotary.ico");
+                    if (File.Exists(iconPath))
+                        hIcon = NativeMethods.LoadImageW(IntPtr.Zero, iconPath, NativeMethods.IMAGE_ICON,
+                            16, 16, NativeMethods.LR_LOADFROMFILE);
+                }
                 if (hIcon == IntPtr.Zero)
                     hIcon = NativeMethods.LoadImageW(IntPtr.Zero, Environment.ProcessPath ?? "RotaryMonitor.exe",
                         NativeMethods.IMAGE_ICON, 16, 16, 0);
+                if (hIcon == IntPtr.Zero)
+                    return;
+
                 _tray = new TrayIcon(hIcon, L.Get("AppTitle.Title"));
                 _tray.LeftClicked += ShowWindow;
                 _tray.ShowRequested += ShowWindow;
@@ -992,8 +1002,16 @@ namespace RotaryMonitor
             DispatcherQueue.TryEnqueue(delegate
             {
                 SaveConfig();
+                _tray?.Dispose();
                 Application.Current.Exit();
             });
+        }
+
+        private void OnExitClick(object sender, RoutedEventArgs e)
+        {
+            SaveConfig();
+            _tray?.Dispose();
+            Application.Current.Exit();
         }
 
         private void OnAppWindowClosing(AppWindow sender, AppWindowClosingEventArgs args)
