@@ -1,4 +1,6 @@
 host/winui/bin/
 host/winui/obj/
 host/winui/dist/
+host/winui/dist-single/
+host/winui/installer/output/
 host/winui/*.user

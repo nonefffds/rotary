@@ -42,6 +42,11 @@ namespace RotaryMonitor
             _cfg = App.Config;
             InitializeComponent();
             Title = L.Get("AppTitle.Title");
+            string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "rotary.ico");
+            if (File.Exists(iconPath))
+            {
+                try { AppWindow.SetIcon(iconPath); } catch { }
+            }
             AppWindow.Resize(new SizeInt32(860, 900));
             LoadConfigIntoUi();
             try { SetupTray(); } catch { }

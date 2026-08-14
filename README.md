@@ -30,9 +30,15 @@ Windows, auto-restart on crash, and update checks against GitHub releases.
 
 1. Flash the firmware (see the **rotary-firmware** repo) and attach the sensor
    to your monitor.
-2. Run `host/winui/publish.bat` (or use the pre-built `host/winui/dist/`) —
-   the `dist/` folder is fully self-contained: copy it to any x64 Windows
-   10/11, no install needed (only the CH340 driver).
+2. Get the app:
+   - **Installer**: `host/winui/installer/output/RotarySetup.exe` — per-user
+     install (no admin), Start-menu + desktop shortcuts, uninstaller.
+     Rebuild any time with `host/winui/installer/build-installer.bat`.
+   - **Portable folder**: run `host/winui/publish.bat` → the `dist/` folder is
+     fully self-contained: copy it to any x64 Windows 10/11, no install needed
+     (only the CH340 driver).
+   - Note: WinUI 3 does not support single-file publish, so the self-contained
+     folder (or the installer) is the distribution method.
 3. In the app:
    - **Monitor** → pick the COM port, **Connect**, then **Start monitoring**.
    - **Calibrate…** once — keep the monitor horizontal, choose 90° or 270°,
@@ -46,6 +52,7 @@ Windows, auto-restart on crash, and update checks against GitHub releases.
 ## Repository layout
 
 - `host/winui/` — the WinUI 3 app (project + `publish.bat` + `dist/` output).
+  - `installer/` — Inno Setup script + `build-installer.bat` (`RotarySetup.exe`).
   - `Assets/rotary.ico` — app / tray icon (source: `Assets/rotary.png`).
   - `Strings/{en-US,zh-CN,ja-JP}/Resources.resw` + `tools/gen_localization.py`
     — localized strings (regenerate with `python tools/gen_localization.py`).

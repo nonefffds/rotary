@@ -14,8 +14,29 @@ namespace RotaryMonitor
             // Localization is driven by Config.Language through L.Init; the
             // ApplicationLanguages override is avoided because it crashes in
             // unpackaged/self-contained WinUI 3 builds.
-            L.Init(Config.Language);
-            InitializeComponent();
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                LogCrash(e.ExceptionObject as Exception);
+            try
+            {
+                L.Init(Config.Language);
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                LogCrash(ex);
+                throw;
+            }
+        }
+
+        private static void LogCrash(Exception? ex)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(
+                    System.IO.Path.Combine(AppContext.BaseDirectory, "rotary_crash.log"),
+                    ex == null ? "unknown exception" : ex.ToString());
+            }
+            catch { }
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
