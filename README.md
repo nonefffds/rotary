@@ -4,6 +4,8 @@
   <img src="host/winui/Assets/rotary.webp" alt="Rotary logo" width="180"/>
 </p>
 
+<p align="center"><em>One turn, aligned.</em></p>
+
 Windows software for the **Rotary** monitor-rotation accessory. It connects to a
 D1 Mini + BMI160 sensor (see the [rotary-firmware](https://github.com/nonefffds/rotary-firmware)
 repo) over USB serial, and when you rotate your monitor it automatically:
@@ -75,7 +77,7 @@ Pre-built binaries are not kept in the repo.
     wallpaper, options, about.
   - `TrayIcon.cs`, `NativeMethods.cs` — system tray + Win32 interop.
   - `Win32.cs` — display rotation / wallpaper P/Invoke.
-  - `Wallpaper.cs` — per-monitor wallpaper composition.
+  - `DesktopWallpaper.cs` — per-monitor wallpapers via the IDesktopWallpaper COM API.
   - `SensorWindow.xaml(.cs)` — read-only live angle view.
   - `THIRD-PARTY-NOTICES.txt` — open-source attributions (shown in the app).
 
@@ -93,7 +95,7 @@ installer\build-installer.bat   # builds installer\output\RotarySetup.exe
 ## Update checks
 
 The About page compares the app version against the latest release on this
-repo. Tag releases with the app version (e.g. `v1.0.1`) to enable it.
+repo. Tag releases with the app version (e.g. `v1.0.3`) to enable it.
 
 ## License
 
