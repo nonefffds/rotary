@@ -65,24 +65,33 @@ namespace RotaryMonitor
                     continue;
                 int w = m.Rect.Right - m.Rect.Left;
                 int h = m.Rect.Bottom - m.Rect.Top;
-                using (Image src = Image.FromFile(path))
+                try
                 {
-                    float scale = Math.Max((float)w / src.Width, (float)h / src.Height);
-                    int sw = (int)Math.Round(src.Width * scale);
-                    int sh = (int)Math.Round(src.Height * scale);
-                    int sx = (sw - w) / 2;
-                    int sy = (sh - h) / 2;
-                    using (var g = Graphics.FromImage(canvas))
+                    using (Image src = Image.FromFile(path))
                     {
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.DrawImage(src,
-                            new Rectangle(m.Rect.Left - minX, m.Rect.Top - minY, w, h),
-                            new Rectangle(sx, sy, w, h), GraphicsUnit.Pixel);
+                        float scale = Math.Max((float)w / src.Width, (float)h / src.Height);
+                        int sw = (int)Math.Round(src.Width * scale);
+                        int sh = (int)Math.Round(src.Height * scale);
+                        int sx = (sw - w) / 2;
+                        int sy = (sh - h) / 2;
+                        using (var g = Graphics.FromImage(canvas))
+                        {
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.DrawImage(src,
+                                new Rectangle(m.Rect.Left - minX, m.Rect.Top - minY, w, h),
+                                new Rectangle(sx, sy, w, h), GraphicsUnit.Pixel);
+                        }
                     }
+                }
+                catch
+                {
+                    // one bad image must not abort the whole wallpaper
                 }
             }
 
-            string tmp = Path.Combine(Path.GetTempPath(), "rotary_wallpaper.png");
+            // unique temp file so it never collides with the current wallpaper
+            string tmp = Path.Combine(Path.GetTempPath(),
+                "rotary_wallpaper_" + Guid.NewGuid().ToString("N").Substring(0, 8) + ".png");
             canvas.Save(tmp, System.Drawing.Imaging.ImageFormat.Png);
             canvas.Dispose();
             return tmp;

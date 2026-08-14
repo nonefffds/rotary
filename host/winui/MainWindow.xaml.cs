@@ -896,14 +896,25 @@ namespace RotaryMonitor
                 Log(L.Get("MsgWallpaperNotFound"));
                 return;
             }
-            List<Win32.MonitorInfo> monitors = Win32.EnumMonitors();
-            string current = Win32.GetCurrentWallpaper();
-            string tmp = Wallpaper.Compose(rotLand, rotPort,
-                _cfg.RestLandscapeWallpaper, _cfg.RestPortraitWallpaper, current,
-                monitors, ResolveRotateTarget(),
-                _cfg.ChangeRestWallpaper, _cfg.RestFollowRotation);
-            Win32.SetWallpaper(tmp, "fill");
-            Log(string.Format(L.Get("MsgWallpaperBoth"), ResolveRotateTarget()));
+            try
+            {
+                string target = ResolveRotateTarget();
+                List<Win32.MonitorInfo> monitors = Win32.EnumMonitors();
+                string current = Win32.GetCurrentWallpaper();
+                Log("wallpaper: rot=" + target + " land=" + rotLand + " port=" + rotPort +
+                    " restChange=" + _cfg.ChangeRestWallpaper +
+                    " follow=" + _cfg.RestFollowRotation);
+                string tmp = Wallpaper.Compose(rotLand, rotPort,
+                    _cfg.RestLandscapeWallpaper, _cfg.RestPortraitWallpaper, current,
+                    monitors, target,
+                    _cfg.ChangeRestWallpaper, _cfg.RestFollowRotation);
+                Win32.SetWallpaper(tmp, "fill");
+                Log("wallpaper applied: " + tmp);
+            }
+            catch (Exception ex)
+            {
+                Log(string.Format(L.Get("MsgApplyFailed"), ex.Message));
+            }
         }
 
         // ---------------- UI marshalling ----------------
