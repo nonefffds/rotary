@@ -137,6 +137,13 @@ namespace RotaryMonitor
 
         private void LoadConfigIntoUi()
         {
+            // Must be set before any control is populated: setting TextBox/Toggle
+            // values fires their change handlers, which auto-save the config. If
+            // they saved now, the port/monitor combos are still empty (they are
+            // filled by RefreshPorts/RefreshMonitors below) and the persisted
+            // profile would be overwritten with blanks on every launch.
+            _startupInit = true;
+
             LocalizeUi();
 
             ApplyOnStartupCheck.IsChecked = _cfg.ApplyOnStartup;
@@ -467,11 +474,15 @@ namespace RotaryMonitor
         private void OnWallpaperToggle(object sender, RoutedEventArgs e)
         {
             UpdateWallpaperVisibility();
+            if (_startupInit)
+                return;
             SaveFromUi();
         }
 
         private void OnWallpaperTextChanged(object sender, TextChangedEventArgs e)
         {
+            if (_startupInit)
+                return;
             SaveFromUi();
         }
 
@@ -483,9 +494,29 @@ namespace RotaryMonitor
 
         private void ShowSavedPrompt(FrameworkElement anchor)
         {
+            var icon = new FontIcon
+            {
+                Glyph = "\uE73E",
+                FontSize = 16,
+                Foreground = new SolidColorBrush(UiColors.ForestGreen),
+            };
+            var text = new TextBlock
+            {
+                Text = L.Get("MsgSaved"),
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            var panel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 10,
+                Padding = new Thickness(8, 6, 12, 6),
+            };
+            panel.Children.Add(icon);
+            panel.Children.Add(text);
+
             var fly = new Flyout
             {
-                Content = new TextBlock { Text = L.Get("MsgSaved") },
+                Content = panel,
                 Placement = FlyoutPlacementMode.Bottom,
             };
             fly.ShowAt(anchor);
