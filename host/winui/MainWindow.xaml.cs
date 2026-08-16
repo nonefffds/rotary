@@ -35,6 +35,9 @@ namespace RotaryMonitor
         private SensorWindow? _sensorWindow;
         private TrayIcon? _tray;
         private bool _trayHintShown;
+        private string _latestVersion = "";
+        private string _updateDownloadUrl = "";
+        private bool _updateCheckInProgress;
 
         private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
         private const string RunValueName = "RotaryMonitor";
@@ -54,7 +57,11 @@ namespace RotaryMonitor
             {
                 string logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "rotary.png");
                 if (File.Exists(logoPath))
-                    LogoImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri(logoPath));
+                {
+                    var bmp = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri(logoPath));
+                    LogoImage.Source = bmp;
+                    AboutLogoImage.Source = bmp;
+                }
             }
             catch { }
             AppWindow.Resize(new SizeInt32(920, 920));
@@ -113,8 +120,11 @@ namespace RotaryMonitor
             OptionsHeaderText.Text = L.Get("OptionsHeader");
             ApplyOnStartupCheck.Content = L.Get("ApplyOnStartupCheck.Content");
             StartWithWindowsCheck.Content = L.Get("StartWithWindows");
+            SilentStartWithWindowsCheck.Content = L.Get("SilentStartWithWindows");
             AutoConnectCheck.Content = L.Get("AutoConnect");
+            AutoStartMonitorCheck.Content = L.Get("AutoStartMonitor");
             AutoRestartCheck.Content = L.Get("AutoRestart");
+            CheckUpdatesOnStartupCheck.Content = L.Get("CheckUpdatesOnStartup");
             LanguageLabelText.Text = L.Get("LanguageLabel.Text");
             SaveButtonText.Text = L.Get("SaveButton.Content");
             RestartButtonText.Text = L.Get("RestartNow");
@@ -122,10 +132,12 @@ namespace RotaryMonitor
             LogHeaderText.Text = L.Get("LogHeader.Text");
 
             AboutHeaderText.Text = L.Get("NavAbout");
+            AboutTaglineText.Text = L.Get("AboutTagline");
             AboutVersionText.Text = string.Format(L.Get("AboutVersion"), AppVersion);
             AboutRepoLink.Content = L.Get("AboutRepo");
             AboutFirmwareLink.Content = L.Get("AboutFirmware");
             CheckUpdatesButtonText.Text = L.Get("CheckUpdates");
+            DownloadUpdateButtonText.Text = L.Get("DownloadUpdate");
             LicensesButtonText.Text = L.Get("ViewLicenses");
 
             LanguageCombo.Items.Clear();
@@ -170,10 +182,15 @@ namespace RotaryMonitor
 
             _startupInit = true;
             StartWithWindowsCheck.IsChecked = _cfg.StartWithWindows;
-            ApplyStartupRegistry(_cfg.StartWithWindows);
+            ApplyStartupRegistry(_cfg.StartWithWindows, _cfg.SilentStartWithWindows);
+            SilentStartWithWindowsCheck.IsChecked = _cfg.SilentStartWithWindows;
+            SilentStartWithWindowsCheck.IsEnabled = _cfg.StartWithWindows;
             AutoConnectCheck.IsChecked = _cfg.AutoConnect;
+            AutoStartMonitorCheck.IsChecked = _cfg.AutoConnect && _cfg.AutoStartMonitor;
+            AutoStartMonitorCheck.IsEnabled = _cfg.AutoConnect;
             AutoRestartCheck.IsChecked = _cfg.AutoRestart;
             ApplyAutoRestartRegistration(_cfg.AutoRestart);
+            CheckUpdatesOnStartupCheck.IsChecked = _cfg.CheckUpdatesOnStartup;
             _startupInit = false;
 
             RefreshPorts();
@@ -182,7 +199,24 @@ namespace RotaryMonitor
             Nav.SelectedItem = NavMonitor;
 
             if (_cfg.AutoConnect)
-                DispatcherQueue.TryEnqueue(delegate { Connect(); });
+                DispatcherQueue.TryEnqueue(delegate
+                {
+                    Connect();
+                    if (_cfg.AutoStartMonitor && IsConnected)
+                    {
+                        _firstMessage = true;
+                        _lastApplied = -1;
+                        _wantRun = true;
+                        SetStartButton(true);
+                        Log(L.Get("MsgAutoStartMonitor"));
+                    }
+                });
+
+            if (_cfg.CheckUpdatesOnStartup)
+                DispatcherQueue.TryEnqueue(delegate
+                {
+                    _ = CheckForUpdatesAsync(silent: true);
+                });
         }
 
         private void ReadConfigFromUi()
@@ -198,8 +232,12 @@ namespace RotaryMonitor
             _cfg.RestPortraitWallpaper = RestPortraitBox.Text.Trim();
             _cfg.Language = LangFromIndex(LanguageCombo.SelectedIndex);
             _cfg.StartWithWindows = StartWithWindowsCheck.IsChecked == true;
+            _cfg.SilentStartWithWindows = SilentStartWithWindowsCheck.IsChecked == true;
             _cfg.AutoConnect = AutoConnectCheck.IsChecked == true;
+            _cfg.AutoStartMonitor = AutoConnectCheck.IsChecked == true
+                && AutoStartMonitorCheck.IsChecked == true;
             _cfg.AutoRestart = AutoRestartCheck.IsChecked == true;
+            _cfg.CheckUpdatesOnStartup = CheckUpdatesOnStartupCheck.IsChecked == true;
             _cfg.RotateMonitor = (RotateTargetCombo.SelectedItem as ComboBoxItem)?.Tag as string ?? "";
         }
 
@@ -329,12 +367,15 @@ namespace RotaryMonitor
                 return k?.GetValue(RunValueName) != null;
         }
 
-        private static void ApplyStartupRegistry(bool enabled)
+        private static void ApplyStartupRegistry(bool enabled, bool silent)
         {
             using (var k = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(RunKeyPath, true))
             {
                 if (enabled)
-                    k.SetValue(RunValueName, "\"" + Environment.ProcessPath + "\"");
+                {
+                    string arg = silent ? " --silent" : "";
+                    k.SetValue(RunValueName, "\"" + Environment.ProcessPath + "\"" + arg);
+                }
                 else
                     k.DeleteValue(RunValueName, false);
             }
@@ -346,10 +387,23 @@ namespace RotaryMonitor
                 return;
             bool enabled = StartWithWindowsCheck.IsChecked == true;
             _cfg.StartWithWindows = enabled;
-            ApplyStartupRegistry(enabled);
+            if (!enabled)
+                SilentStartWithWindowsCheck.IsChecked = false;
+            SilentStartWithWindowsCheck.IsEnabled = enabled;
+            _cfg.SilentStartWithWindows = SilentStartWithWindowsCheck.IsChecked == true;
+            ApplyStartupRegistry(enabled, _cfg.SilentStartWithWindows);
             _cfg.Save(AppConfig.DefaultPath);
             SetStatusInfo(enabled ? L.Get("MsgStartupOn") : L.Get("MsgStartupOff"),
                 InfoBarSeverity.Success);
+        }
+
+        private void OnSilentStartChanged(object sender, RoutedEventArgs e)
+        {
+            if (_startupInit)
+                return;
+            _cfg.SilentStartWithWindows = SilentStartWithWindowsCheck.IsChecked == true;
+            ApplyStartupRegistry(_cfg.StartWithWindows, _cfg.SilentStartWithWindows);
+            _cfg.Save(AppConfig.DefaultPath);
         }
 
         private static void ApplyAutoRestartRegistration(bool enabled)
@@ -374,7 +428,20 @@ namespace RotaryMonitor
         {
             if (_startupInit)
                 return;
-            _cfg.AutoConnect = AutoConnectCheck.IsChecked == true;
+            bool on = AutoConnectCheck.IsChecked == true;
+            _cfg.AutoConnect = on;
+            if (!on)
+                AutoStartMonitorCheck.IsChecked = false;
+            AutoStartMonitorCheck.IsEnabled = on;
+            _cfg.AutoStartMonitor = on && AutoStartMonitorCheck.IsChecked == true;
+            _cfg.Save(AppConfig.DefaultPath);
+        }
+
+        private void OnAutoStartMonitorChanged(object sender, RoutedEventArgs e)
+        {
+            if (_startupInit)
+                return;
+            _cfg.AutoStartMonitor = AutoStartMonitorCheck.IsChecked == true;
             _cfg.Save(AppConfig.DefaultPath);
         }
 
@@ -388,6 +455,14 @@ namespace RotaryMonitor
             _cfg.Save(AppConfig.DefaultPath);
             SetStatusInfo(enabled ? L.Get("MsgAutoRestartOn") : L.Get("MsgAutoRestartOff"),
                 InfoBarSeverity.Success);
+        }
+
+        private void OnCheckUpdatesStartupChanged(object sender, RoutedEventArgs e)
+        {
+            if (_startupInit)
+                return;
+            _cfg.CheckUpdatesOnStartup = CheckUpdatesOnStartupCheck.IsChecked == true;
+            _cfg.Save(AppConfig.DefaultPath);
         }
 
         private void OnRestartClick(object sender, RoutedEventArgs e)
@@ -1175,7 +1250,16 @@ namespace RotaryMonitor
 
         private async void OnCheckUpdatesClick(object sender, RoutedEventArgs e)
         {
-            UpdateResultText.Text = "";
+            await CheckForUpdatesAsync(silent: false);
+        }
+
+        /// <summary>Check GitHub for the latest release. When an update exists,
+        /// enables the download button so the user can install it.</summary>
+        private async Task CheckForUpdatesAsync(bool silent)
+        {
+            if (_updateCheckInProgress)
+                return;
+            _updateCheckInProgress = true;
             try
             {
                 var uri = new Uri(RepoUrl);
@@ -1194,14 +1278,79 @@ namespace RotaryMonitor
                     string json = await client.GetStringAsync(api);
                     string tag = ExtractTag(json);
                     if (string.IsNullOrEmpty(tag) || tag.TrimStart('v') == AppVersion)
+                    {
                         UpdateResultText.Text = L.Get("UpToDate");
+                        DownloadUpdateButton.Visibility = Visibility.Collapsed;
+                        Log("update check: up to date (" + AppVersion + ")");
+                    }
                     else
+                    {
+                        _latestVersion = tag.TrimStart('v');
+                        _updateDownloadUrl = ExtractDownloadUrl(json);
                         UpdateResultText.Text = string.Format(L.Get("UpdateAvailable"), tag);
+                        bool downloadable = !string.IsNullOrEmpty(_updateDownloadUrl);
+                        DownloadUpdateButton.Visibility = downloadable ? Visibility.Visible : Visibility.Collapsed;
+                        Log(string.Format(L.Get("UpdateAvailable"), tag));
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 UpdateResultText.Text = L.Get("UpdateFailed");
+                Log("update check failed: " + ex.Message);
+            }
+            finally
+            {
+                _updateCheckInProgress = false;
+            }
+        }
+
+        private async void OnDownloadUpdateClick(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_updateDownloadUrl))
+            {
+                await CheckForUpdatesAsync(silent: false);
+                if (string.IsNullOrEmpty(_updateDownloadUrl))
+                    return;
+            }
+            DownloadUpdateButton.IsEnabled = false;
+            DownloadUpdateButtonText.Text = L.Get("DownloadingUpdate");
+            try
+            {
+                string tmp = Path.Combine(Path.GetTempPath(), "RotarySetup_" + _latestVersion + ".exe");
+                using (var client = new System.Net.Http.HttpClient())
+                {
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Rotary/" + AppVersion);
+                    client.Timeout = TimeSpan.FromMinutes(5);
+                    byte[] data = await client.GetByteArrayAsync(_updateDownloadUrl);
+                    File.WriteAllBytes(tmp, data);
+                }
+                DownloadUpdateButtonText.Text = L.Get("DownloadUpdate");
+
+                var dlg = new ContentDialog
+                {
+                    Title = L.Get("MsgUpdateReadyTitle"),
+                    Content = string.Format(L.Get("MsgUpdateReadyBody"), tmp),
+                    PrimaryButtonText = L.Get("MsgInstallNow"),
+                    CloseButtonText = L.Get("MsgCancel"),
+                    XamlRoot = Content.XamlRoot,
+                };
+                if (await dlg.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    SaveConfig();
+                    _tray?.Dispose();
+                    Process.Start(new ProcessStartInfo(tmp) { UseShellExecute = true });
+                    Application.Current.Exit();
+                }
+            }
+            catch (Exception ex)
+            {
+                UpdateResultText.Text = string.Format(L.Get("MsgUpdateDownloadFailed"), ex.Message);
+                Log(string.Format(L.Get("MsgUpdateDownloadFailed"), ex.Message));
+            }
+            finally
+            {
+                DownloadUpdateButton.IsEnabled = true;
             }
         }
 
@@ -1214,6 +1363,35 @@ namespace RotaryMonitor
             int j = i;
             while (j < json.Length && json[j] != '"') j++;
             return json.Substring(i, j - i);
+        }
+
+        /// <summary>Find the browser_download_url of the setup exe in the latest
+        /// release JSON (assets array), so the app can self-install.</summary>
+        private static string ExtractDownloadUrl(string json)
+        {
+            int idx = 0;
+            while ((idx = json.IndexOf("\"browser_download_url\":", idx, StringComparison.Ordinal)) >= 0)
+            {
+                int nameIdx = json.LastIndexOf("\"name\":", idx, StringComparison.Ordinal);
+                string name = "";
+                if (nameIdx >= 0)
+                {
+                    nameIdx += "\"name\":".Length;
+                    while (nameIdx < json.Length && (json[nameIdx] == ' ' || json[nameIdx] == '"')) nameIdx++;
+                    int nameEnd = nameIdx;
+                    while (nameEnd < json.Length && json[nameEnd] != '"') nameEnd++;
+                    name = json.Substring(nameIdx, nameEnd - nameIdx);
+                }
+                int u = idx + "\"browser_download_url\":".Length;
+                while (u < json.Length && (json[u] == ' ' || json[u] == '"')) u++;
+                int v = u;
+                while (v < json.Length && json[v] != '"') v++;
+                string url = json.Substring(u, v - u);
+                if (name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                    return url;
+                idx += 1;
+            }
+            return "";
         }
     }
 }

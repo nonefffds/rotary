@@ -408,4 +408,37 @@
     <data name="CalNotConnected" xml:space="preserve">
         <value>未连接——请先连接串口。</value>
     </data>
+    <data name="SilentStartWithWindows" xml:space="preserve">
+        <value>静默启动（不显示窗口）</value>
+    </data>
+    <data name="AutoStartMonitor" xml:space="preserve">
+        <value>连接后自动开始监控</value>
+    </data>
+    <data name="CheckUpdatesOnStartup" xml:space="preserve">
+        <value>启动时检查更新</value>
+    </data>
+    <data name="AboutTagline" xml:space="preserve">
+        <value>一转，对齐。</value>
+    </data>
+    <data name="DownloadUpdate" xml:space="preserve">
+        <value>下载更新</value>
+    </data>
+    <data name="DownloadingUpdate" xml:space="preserve">
+        <value>正在下载…</value>
+    </data>
+    <data name="MsgUpdateReadyTitle" xml:space="preserve">
+        <value>更新已准备就绪</value>
+    </data>
+    <data name="MsgUpdateReadyBody" xml:space="preserve">
+        <value>更新已下载到 {0}。退出 Rotary 并立即运行安装程序？</value>
+    </data>
+    <data name="MsgInstallNow" xml:space="preserve">
+        <value>立即安装</value>
+    </data>
+    <data name="MsgUpdateDownloadFailed" xml:space="preserve">
+        <value>更新下载失败：{0}</value>
+    </data>
+    <data name="MsgAutoStartMonitor" xml:space="preserve">
+        <value>已自动开始监控。</value>
+    </data>
 </root>

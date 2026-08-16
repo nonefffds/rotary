@@ -91,7 +91,19 @@ namespace RotaryMonitor
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             MainWindowRef = new MainWindow();
+
+            // Started from the Run key with --silent and the option enabled:
+            // run in the tray without showing the window.
+            bool silent = Array.Exists(Environment.GetCommandLineArgs(),
+                a => string.Equals(a, "--silent", StringComparison.OrdinalIgnoreCase))
+                && App.Config.SilentStartWithWindows;
             MainWindowRef.Activate();
+            if (silent)
+            {
+                // Hide right after activate: the window never paints a visible
+                // frame, so startup stays silent (tray icon only).
+                try { MainWindowRef.AppWindow.Hide(); } catch { }
+            }
         }
     }
 }

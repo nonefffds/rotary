@@ -21,8 +21,11 @@ namespace RotaryMonitor
         public int State3To = 3;   // firmware state 3 -> dmdo (1 or 3)
         public string Language = "";  // "", "en-US", "zh-CN", "ja-JP"
         public bool StartWithWindows = false;
+        public bool SilentStartWithWindows = false;   // start hidden in the tray when launched via the Run key
         public bool AutoRestart = false;
         public bool AutoConnect = false;
+        public bool AutoStartMonitor = false;   // auto-start monitoring once auto-connect succeeds
+        public bool CheckUpdatesOnStartup = true;
         public string RotateMonitor = "";   // device name of the monitor to rotate ("" = primary)
         public double MountOffset = 0;      // degrees; sensor mounting offset from calibration
 
@@ -79,8 +82,11 @@ namespace RotaryMonitor
                         break;
                     case "language": c.Language = v; break;
                     case "startWithWindows": c.StartWithWindows = v == "true"; break;
+                    case "silentStartWithWindows": c.SilentStartWithWindows = v == "true"; break;
                     case "autoRestart": c.AutoRestart = v == "true"; break;
                     case "autoConnect": c.AutoConnect = v == "true"; break;
+                    case "autoStartMonitor": c.AutoStartMonitor = v == "true"; break;
+                    case "checkUpdatesOnStartup": c.CheckUpdatesOnStartup = v == "true"; break;
                     case "rotateMonitor": c.RotateMonitor = v; break;
                     case "mountOffset":
                         double mo; if (double.TryParse(v,
@@ -124,8 +130,11 @@ namespace RotaryMonitor
                 "state3To=" + State3To,
                 "language=" + Language,
                 "startWithWindows=" + (StartWithWindows ? "true" : "false"),
+                "silentStartWithWindows=" + (SilentStartWithWindows ? "true" : "false"),
                 "autoRestart=" + (AutoRestart ? "true" : "false"),
                 "autoConnect=" + (AutoConnect ? "true" : "false"),
+                "autoStartMonitor=" + (AutoStartMonitor ? "true" : "false"),
+                "checkUpdatesOnStartup=" + (CheckUpdatesOnStartup ? "true" : "false"),
                 "rotateMonitor=" + RotateMonitor,
                 "mountOffset=" + MountOffset.ToString("0.##",
                     System.Globalization.CultureInfo.InvariantCulture),

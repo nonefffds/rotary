@@ -408,4 +408,37 @@
     <data name="CalNotConnected" xml:space="preserve">
         <value>Not connected — connect to a COM port first.</value>
     </data>
+    <data name="SilentStartWithWindows" xml:space="preserve">
+        <value>Start silently in the background (no window)</value>
+    </data>
+    <data name="AutoStartMonitor" xml:space="preserve">
+        <value>Auto-start monitoring when connected</value>
+    </data>
+    <data name="CheckUpdatesOnStartup" xml:space="preserve">
+        <value>Check for updates on startup</value>
+    </data>
+    <data name="AboutTagline" xml:space="preserve">
+        <value>One turn, aligned.</value>
+    </data>
+    <data name="DownloadUpdate" xml:space="preserve">
+        <value>Download update</value>
+    </data>
+    <data name="DownloadingUpdate" xml:space="preserve">
+        <value>Downloading…</value>
+    </data>
+    <data name="MsgUpdateReadyTitle" xml:space="preserve">
+        <value>Update ready</value>
+    </data>
+    <data name="MsgUpdateReadyBody" xml:space="preserve">
+        <value>Update downloaded to {0}. Exit Rotary and run the installer now?</value>
+    </data>
+    <data name="MsgInstallNow" xml:space="preserve">
+        <value>Install now</value>
+    </data>
+    <data name="MsgUpdateDownloadFailed" xml:space="preserve">
+        <value>Update download failed: {0}</value>
+    </data>
+    <data name="MsgAutoStartMonitor" xml:space="preserve">
+        <value>Monitoring auto-started.</value>
+    </data>
 </root>

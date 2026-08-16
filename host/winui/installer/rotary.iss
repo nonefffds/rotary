@@ -1,5 +1,5 @@
 #define MyAppName "Rotary"
-#define MyAppVersion "1.0.4"
+#define MyAppVersion "1.0.5"
 #define MyAppExeName "RotaryMonitor.exe"
 
 [Setup]
